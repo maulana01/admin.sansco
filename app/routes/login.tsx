@@ -125,7 +125,7 @@ export default function Login() {
   const authCheckStatus = useActionData<typeof action>();
   return (
     <div style={loginContainerStyle}>
-      <h2>Login Page</h2>
+      <h2>Sansco Dashboard Login</h2>
       <Form style={loginFormStyle} method='post'>
         <label htmlFor='email' style={labelStyle}>
           Email:
