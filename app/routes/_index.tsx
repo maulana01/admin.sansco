@@ -1,6 +1,12 @@
 import type { V2_MetaFunction } from "@vercel/remix";
+import { LoaderArgs, redirect } from '@remix-run/node';
+import { Outlet} from '@remix-run/react';
 
 export const meta: V2_MetaFunction = () => [{ title: "New Remix App" }];
+
+export async function loader({ request }: LoaderArgs) {
+  return redirect('/login')
+}
 
 export default function Index() {
   return (
@@ -31,6 +37,7 @@ export default function Index() {
           </a>
         </li>
       </ul>
+      <Outlet/>
     </div>
   );
 }

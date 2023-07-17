@@ -1,4 +1,8 @@
-/** @type {import('@remix-run/dev').AppConfig} */
+/**
+ * @format
+ * @type {import('@remix-run/dev').AppConfig}
+ */
+
 module.exports = {
   future: {
     v2_dev: true,
@@ -8,8 +12,8 @@ module.exports = {
     v2_normalizeFormMethod: true,
     v2_routeConvention: true,
   },
-  ignoredRouteFiles: ["**/.*"],
-  serverModuleFormat: "cjs",
+  ignoredRouteFiles: ['**/.*'],
+  serverModuleFormat: 'cjs',
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",
   // serverBuildPath: "build/index.js",
