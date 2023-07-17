@@ -7,7 +7,7 @@ import { decodeToken } from 'react-jwt';
 import { createUserSession, storage } from '~/utils/session.server';
 import React from 'react';
 
-export const config = { runtime: 'edge' };
+// export const config = { runtime: 'edge' };
 
 export const meta: V2_MetaFunction = () => [{ title: 'Login Page' }];
 

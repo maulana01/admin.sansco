@@ -6,7 +6,7 @@ import { decodeToken } from 'react-jwt';
 import { storage } from '~/utils/session.server';
 import React from 'react';
 
-export const config = { runtime: 'edge' };
+// export const config = { runtime: 'edge' };
 
 export const meta: V2_MetaFunction = () => [{ title: 'Home | Dashboard Owner' }];
 
