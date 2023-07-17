@@ -6,7 +6,7 @@ import { decodeToken } from 'react-jwt';
 import { storage } from '~/utils/session.server';
 import { redirect, LoaderArgs, ActionArgs } from '@remix-run/node';
 
-export const config = { runtime: 'edge' };
+// export const config = { runtime: 'edge' };
 
 export const meta: V2_MetaFunction = () => [{ title: 'Forgot Password' }];
 
