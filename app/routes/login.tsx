@@ -42,7 +42,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   const login = async () => {
     try {
-      const res = await fetch('http://localhost:4000/api/v1/auth/login', {
+      const res = await fetch('http://103.175.216.182:4000/api/v1/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

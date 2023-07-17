@@ -17,7 +17,7 @@ const notify = () => {
     toastId: 'paidOrderToast',
   });
 };
-const socket = io('http://localhost:4000');
+const socket = io('http://103.175.216.182:4000');
 export async function loader({ request }: LoaderArgs) {
   const session = await storage.getSession(request.headers.get('Cookie'));
   const getToken = session.get('token');

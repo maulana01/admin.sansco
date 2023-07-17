@@ -26,7 +26,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const fetchOrderDetail = async () => {
     try {
-      const res = await fetch(`http://localhost:4000/api/v1/orders/order/${params.order_code}`, {
+      const res = await fetch(`http://103.175.216.182:4000/api/v1/orders/order/${params.order_code}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -50,7 +50,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     const cancelOrder = async () => {
       try {
         // const email = useLoaderData();
-        const res = await fetch(`http://localhost:4000/api/v1/orders/cancel-order/${params.order_code}`, {
+        const res = await fetch(`http://103.175.216.182:4000/api/v1/orders/cancel-order/${params.order_code}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     const confirmPayOrder = async () => {
       try {
         // const email = useLoaderData();
-        const res = await fetch(`http://localhost:4000/api/v1/orders/pay-order/${params.order_code}`, {
+        const res = await fetch(`http://103.175.216.182:4000/api/v1/orders/pay-order/${params.order_code}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',

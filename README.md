@@ -1,3 +1,5 @@
+<!-- @format -->
+
 # Remix
 
 This directory is a brief example of a [Remix](https://remix.run/docs) site that can be deployed to Vercel with zero configuration.
@@ -29,4 +31,4 @@ Afterwards, start the Remix development server like so:
 npm run dev
 ```
 
-Open up [http://localhost:3000](http://localhost:3000) and you should be ready to go!
+Open up [http://103.175.216.182:3000](http://103.175.216.182:3000) and you should be ready to go!

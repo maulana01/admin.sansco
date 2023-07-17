@@ -29,7 +29,7 @@ export async function loader({ request }: LoaderArgs) {
       const page = 1;
       const limit = 10;
       const queryString = new URLSearchParams({ page: String(page), limit: String(limit) }).toString();
-      const response = await fetch(`http://localhost:4000/api/v1/orders/?${queryString}`, {
+      const response = await fetch(`http://103.175.216.182:4000/api/v1/orders/?${queryString}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
