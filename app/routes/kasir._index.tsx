@@ -52,8 +52,6 @@ export async function loader({ request }: LoaderArgs) {
 export default function KasirOrder() {
   const order = useLoaderData();
   return (
-    <head>
-      <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
       <div style={main}>
         <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
         <div style={helper}>
@@ -100,7 +98,6 @@ export default function KasirOrder() {
           </div>
         </div>
       </div>
-    </head>
   );
 }
 

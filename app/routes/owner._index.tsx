@@ -152,8 +152,6 @@ export default function home() {
   };
 
   return (
-    <head>
-      <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
       <div style={main}>
         <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
         <div style={helper}>
@@ -222,7 +220,6 @@ export default function home() {
         {showModal && <Modal onClose={closeModal} onConfirmDelete={onDeleteConfirmed} />}
         <ToastContainer />
       </div>
-    </head>
   );
 }
 

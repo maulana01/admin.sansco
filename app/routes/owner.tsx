@@ -19,9 +19,7 @@ export async function loader({ request }: LoaderArgs) {
 export default function Owner() {
   const tokenData = useLoaderData();
   return (
-    <head>
-      <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
-      <div style={styles.container}>
+    <div style={styles.container}>
         <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap' />
         <link href='https://fonts.cdnfonts.com/css/helvetica-neue-5' rel='stylesheet' />
         <nav style={menu} tabIndex={0}>
@@ -75,7 +73,6 @@ export default function Owner() {
         </nav>
         <Outlet />
       </div>
-    </head>
   );
 }
 

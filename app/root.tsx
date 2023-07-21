@@ -1,25 +1,19 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
-import { Analytics } from "@vercel/analytics/react";
-import type { LinksFunction } from "@vercel/remix";
+/** @format */
 
-export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-];
+import { cssBundleHref } from '@remix-run/css-bundle';
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import { Analytics } from '@vercel/analytics/react';
+import type { LinksFunction } from '@vercel/remix';
+
+export const links: LinksFunction = () => [...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : [])];
 
 export default function App() {
   return (
-    <html lang="en">
+    <html lang='en'>
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
+        <meta charSet='utf-8' />
+        <meta name='viewport' content='width=device-width,initial-scale=1' />
         <Meta />
         <Links />
       </head>
