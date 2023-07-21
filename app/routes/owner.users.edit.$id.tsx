@@ -32,6 +32,7 @@ export async function loader({ request, params }: LoaderArgs) {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
       });
       return res.json();
@@ -59,6 +60,7 @@ export const action = async ({ request, params }: ActionArgs) => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify({
           name: body.get('name') != '' && body.get('name'),
