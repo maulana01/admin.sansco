@@ -8,6 +8,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { storage } from '~/utils/session.server';
 
+const ip = `http://103.175.216.182:4000`;
+
 export async function loader({ request, params }: LoaderArgs) {
   // Parse cookies from the request headers
   const session = await storage.getSession(request.headers.get('Cookie'));
@@ -28,7 +30,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const getUser = async () => {
     try {
-      const res = await fetch(`http://103.175.216.182:4000/api/v1/users/${params.id}`, {
+      const res = await fetch(`${ip}/api/v1/users/${params.id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +57,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   const updateUser = async () => {
     try {
-      const res = await fetch(`http://103.175.216.182:4000/api/v1/users/${params.id}`, {
+      const res = await fetch(`${ip}/api/v1/users/${params.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
