@@ -49,6 +49,7 @@ export default function PaidOrders() {
 
   return (
     <div style={main}>
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
       <div style={helper}>
         <h2 style={heading}>Data Pesanan yang Sudah Dibayar</h2>
       </div>

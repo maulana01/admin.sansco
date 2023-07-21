@@ -115,6 +115,7 @@ export default function AddCategories() {
 
   return (
     <div style={main}>
+			<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
       <div style={helper}>
         <h2 style={heading}>Tambah Data Kategori Menu</h2>
       </div>

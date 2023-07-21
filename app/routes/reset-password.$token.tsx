@@ -13,7 +13,7 @@ export const meta: V2_MetaFunction = () => [{ title: 'Forgot Password' }];
 export async function loader({ request, params }: LoaderArgs) {
   // Parse cookies from the request headers
   const session = await storage.getSession(request.headers.get('Cookie'));
-  const getToken = session.get("token");
+  const getToken = session.get('token');
 
   if (getToken) {
     const decodedToken = decodeToken(getToken) as { role: string } | null;
@@ -121,12 +121,13 @@ export default function ResetPassword() {
   const respResetPassword = useActionData<typeof action>();
   return (
     <div style={resetPasswordContainerStyle} className='reset-password-container'>
+      <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
       <h2>Reset Password</h2>
       <Form style={resetPasswordFormStyle} className='reset-password-form' method='post'>
         <label htmlFor='password' style={labelStyle}>
           New Password:
         </label>
-        <input type="hidden" id='email' name="email" value={tokenStatus?.email} />
+        <input type='hidden' id='email' name='email' value={tokenStatus?.email} />
         <input
           type='password'
           id='password'
@@ -151,7 +152,7 @@ export default function ResetPassword() {
         </button>
       </Form>
       {respResetPassword?.status == 'error' && <p>{respResetPassword?.message}</p>}
-			{respResetPassword?.status == 'success' && <p>{respResetPassword?.message}</p>}
+      {respResetPassword?.status == 'success' && <p>{respResetPassword?.message}</p>}
     </div>
   );
 }

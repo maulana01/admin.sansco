@@ -96,6 +96,7 @@ export default function ForgotPassword() {
 	const respForgotPassword = useActionData<typeof action>();
   return (
     <div style={forgotPasswordContainerStyle} className='forgot-password-container'>
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
       <h2>Forgot Password</h2>
       <Form style={forgotPasswordFormStyle} className='forgot-password-form' method='post'>
         <label htmlFor='email' style={labelStyle}>

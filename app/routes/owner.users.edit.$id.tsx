@@ -123,6 +123,7 @@ export default function EditUsers() {
 
   return (
     <div style={main}>
+      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
       <div style={helper}>
         <h2 style={heading}>Update Data User</h2>
       </div>
