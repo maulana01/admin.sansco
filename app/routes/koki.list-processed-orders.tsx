@@ -49,7 +49,7 @@ export default function ProcessedOrdes() {
 
   return (
     <div style={main}>
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+
       <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
       <div style={helper}>
         <h2 style={heading}>Data Pesanan yang Sedang Diproses</h2>

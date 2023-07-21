@@ -32,7 +32,7 @@ export default function Kasir() {
 
   return (
     <div style={styles.container}>
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+
       <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap' />
       <link href='https://fonts.cdnfonts.com/css/helvetica-neue-5' rel='stylesheet' />
       <nav style={menu} tabIndex={0}>

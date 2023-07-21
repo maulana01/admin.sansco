@@ -125,7 +125,7 @@ export default function Login() {
   const authCheckStatus = useActionData<typeof action>();
   return (
     <div style={loginContainerStyle}>
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+
       <h2>Sansco Dashboard Login</h2>
       <Form style={loginFormStyle} method='post'>
         <label htmlFor='email' style={labelStyle}>

@@ -122,40 +122,43 @@ export default function EditUsers() {
   };
 
   return (
-    <div style={main}>
-      <div style={helper}>
-        <h2 style={heading}>Update Data User</h2>
+    <head>
+      <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
+      <div style={main}>
+        <div style={helper}>
+          <h2 style={heading}>Update Data User</h2>
+        </div>
+        {/* Form section */}
+        <div style={formContainer}>
+          <Form method='post' onSubmit={handleSubmit}>
+            <label style={formLabel} htmlFor='dataInput'>
+              Nama:
+            </label>
+            <input style={formInput} type='text' id='dataInput' name='name' defaultValue={loaderResult.data.name} />
+            <label style={formLabel} htmlFor='dataInput'>
+              Nomor Handphone:
+            </label>
+            <input style={formInput} type='text' id='dataInput' name='phone_number' defaultValue={loaderResult.data.phone_number} />
+            <label style={formLabel} htmlFor='dataInput'>
+              Email:
+            </label>
+            <input style={formInput} type='email' id='dataInput' name='email' defaultValue={loaderResult.data.email} />
+            <label style={formLabel} htmlFor='dataInput'>
+              Role:
+            </label>
+            <select style={selectInputStyle} id='selectInput' name='role' defaultValue={loaderResult.data.role}>
+              <option value='OWNER'>Owner</option>
+              <option value='KOKI'>Koki</option>
+              <option value='KASIR'>Kasir</option>
+            </select>
+            <button style={submitButton} type='submit'>
+              Submit
+            </button>
+          </Form>
+        </div>
+        <ToastContainer />
       </div>
-      {/* Form section */}
-      <div style={formContainer}>
-        <Form method='post' onSubmit={handleSubmit}>
-          <label style={formLabel} htmlFor='dataInput'>
-            Nama:
-          </label>
-          <input style={formInput} type='text' id='dataInput' name='name' defaultValue={loaderResult.data.name} />
-          <label style={formLabel} htmlFor='dataInput'>
-            Nomor Handphone:
-          </label>
-          <input style={formInput} type='text' id='dataInput' name='phone_number' defaultValue={loaderResult.data.phone_number} />
-          <label style={formLabel} htmlFor='dataInput'>
-            Email:
-          </label>
-          <input style={formInput} type='email' id='dataInput' name='email' defaultValue={loaderResult.data.email} />
-          <label style={formLabel} htmlFor='dataInput'>
-            Role:
-          </label>
-          <select style={selectInputStyle} id='selectInput' name='role' defaultValue={loaderResult.data.role}>
-            <option value='OWNER'>Owner</option>
-            <option value='KOKI'>Koki</option>
-            <option value='KASIR'>Kasir</option>
-          </select>
-          <button style={submitButton} type='submit'>
-            Submit
-          </button>
-        </Form>
-      </div>
-      <ToastContainer />
-    </div>
+    </head>
   );
 }
 

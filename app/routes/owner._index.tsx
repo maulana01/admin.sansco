@@ -152,75 +152,77 @@ export default function home() {
   };
 
   return (
-    <div style={main}>
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
-      <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
-      <div style={helper}>
-        <h2 style={heading}>Data Pesanan</h2>
-      </div>
-      {/* create button */}
-      <div style={buttonContainer}>
-        <a style={button} href='/owner/users/add'>
-          Tambah Data
-        </a>
-      </div>
-      <div style={tableContainer}>
-        <table style={table}>
-          <thead>
-            <tr>
-              <th style={th}>Nama</th>
-              <th style={th}>Phone Number</th>
-              <th style={th}>Email</th>
-              <th style={th}>Role</th>
-              <th style={th}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.data.map((data: any) => (
-              <tr key={data.id}>
-                <td style={td}>{data.name}</td>
-                <td style={td}>{data.phone_number}</td>
-                <td style={td}>{data.email}</td>
-                <td style={td}>{data.role}</td>
-                <div style={td}>
-                  <td>
-                    <a style={buttonDetail} href={`/owner/users/edit/${data.id}`}>
-                      Update
-                    </a>
-                  </td>
-                  <td>
-                    {/* Pass the user ID to setUserIdToDelete */}
-                    <button
-                      style={buttonDelete}
-                      onClick={() => {
-                        setUserIdToDelete(data.id);
-                        setShowModal(true); // Show the modal when the "Delete" button is clicked
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </div>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {/* <span style={span}>Breakpoints on 900px and 400px</span> */}
-      <div style={paginationContainer}>
-        <div style={pagination}>
-          <span style={paginationItem}>
-            <i className='ri-arrow-left-line'></i>
-          </span>
-          <div style={{ margin: '0 0.5rem' }}>Page 1 of 1</div>
-          <span style={paginationItem}>
-            <i className='ri-arrow-right-line'></i>
-          </span>
+    <head>
+      <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
+      <div style={main}>
+        <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
+        <div style={helper}>
+          <h2 style={heading}>Data Pesanan</h2>
         </div>
+        {/* create button */}
+        <div style={buttonContainer}>
+          <a style={button} href='/owner/users/add'>
+            Tambah Data
+          </a>
+        </div>
+        <div style={tableContainer}>
+          <table style={table}>
+            <thead>
+              <tr>
+                <th style={th}>Nama</th>
+                <th style={th}>Phone Number</th>
+                <th style={th}>Email</th>
+                <th style={th}>Role</th>
+                <th style={th}>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.data.map((data: any) => (
+                <tr key={data.id}>
+                  <td style={td}>{data.name}</td>
+                  <td style={td}>{data.phone_number}</td>
+                  <td style={td}>{data.email}</td>
+                  <td style={td}>{data.role}</td>
+                  <div style={td}>
+                    <td>
+                      <a style={buttonDetail} href={`/owner/users/edit/${data.id}`}>
+                        Update
+                      </a>
+                    </td>
+                    <td>
+                      {/* Pass the user ID to setUserIdToDelete */}
+                      <button
+                        style={buttonDelete}
+                        onClick={() => {
+                          setUserIdToDelete(data.id);
+                          setShowModal(true); // Show the modal when the "Delete" button is clicked
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </div>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* <span style={span}>Breakpoints on 900px and 400px</span> */}
+        <div style={paginationContainer}>
+          <div style={pagination}>
+            <span style={paginationItem}>
+              <i className='ri-arrow-left-line'></i>
+            </span>
+            <div style={{ margin: '0 0.5rem' }}>Page 1 of 1</div>
+            <span style={paginationItem}>
+              <i className='ri-arrow-right-line'></i>
+            </span>
+          </div>
+        </div>
+        {showModal && <Modal onClose={closeModal} onConfirmDelete={onDeleteConfirmed} />}
+        <ToastContainer />
       </div>
-      {showModal && <Modal onClose={closeModal} onConfirmDelete={onDeleteConfirmed} />}
-      <ToastContainer />
-    </div>
+    </head>
   );
 }
 

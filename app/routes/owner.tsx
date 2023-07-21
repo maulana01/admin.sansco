@@ -19,49 +19,63 @@ export async function loader({ request }: LoaderArgs) {
 export default function Owner() {
   const tokenData = useLoaderData();
   return (
-    <div style={styles.container}>
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
-    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap' />
-    <link href='https://fonts.cdnfonts.com/css/helvetica-neue-5' rel='stylesheet' />
-    <nav style={menu} tabIndex={0}>
-      <header style={avatar}>
-        <img
-          src='https://d1fdloi71mui9q.cloudfront.net/S8ZFGu5CSESuNxb8PgVG_4I3acZO5E7rZ1AeJ'
-          alt='User Avatar'
-          style={styles.avatarImg}
-        />
-        <h3 style={{ color:'white' }}>{tokenData.name}</h3>
-      </header>
-      <ul>
-        <li tabIndex={0} style={styles.menuItemDashboard}>
-          <Link style={styles.linkMenu} to="/">Data User</Link>
-        </li>
-        <li tabIndex={0} style={styles.menuItemDashboard}>
-          <Link style={styles.linkMenu} to="/owner/categories/">Data Kategori Menu</Link>
-        </li>
-        <li tabIndex={0} style={styles.menuItemDashboard}>
-          <Link style={styles.linkMenu} to="/owner/menus/">Data Menu</Link>
-        </li>
-        <li tabIndex={0} style={styles.menuItemDashboard}>
-          <Link style={styles.linkMenu} to="/owner/orders/">Data Pesanan</Link>
-        </li>
-        <li tabIndex={0} style={styles.menuItemDashboard}>
-          <Link style={styles.linkMenu} to="/owner/devices/">Data Devices</Link>
-        </li>
-        <li tabIndex={0} style={styles.menuItemSettings}>
-          <Link style={styles.linkMenu} to="/update-profile">Update Profile</Link>
-        </li>
-        <li tabIndex={0} style={styles.logoutItemSettings}>
-          <form action='/logout' method='post'>
-            <button type='submit' style={styles.buttonLogout}>
-              Logout
-            </button>
-          </form>
-        </li>
-      </ul>
-    </nav>
-    <Outlet />
-  </div>
+    <head>
+      <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
+      <div style={styles.container}>
+        <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap' />
+        <link href='https://fonts.cdnfonts.com/css/helvetica-neue-5' rel='stylesheet' />
+        <nav style={menu} tabIndex={0}>
+          <header style={avatar}>
+            <img
+              src='https://d1fdloi71mui9q.cloudfront.net/S8ZFGu5CSESuNxb8PgVG_4I3acZO5E7rZ1AeJ'
+              alt='User Avatar'
+              style={styles.avatarImg}
+            />
+            <h3 style={{ color: 'white' }}>{tokenData.name}</h3>
+          </header>
+          <ul>
+            <li tabIndex={0} style={styles.menuItemDashboard}>
+              <Link style={styles.linkMenu} to='/'>
+                Data User
+              </Link>
+            </li>
+            <li tabIndex={0} style={styles.menuItemDashboard}>
+              <Link style={styles.linkMenu} to='/owner/categories/'>
+                Data Kategori Menu
+              </Link>
+            </li>
+            <li tabIndex={0} style={styles.menuItemDashboard}>
+              <Link style={styles.linkMenu} to='/owner/menus/'>
+                Data Menu
+              </Link>
+            </li>
+            <li tabIndex={0} style={styles.menuItemDashboard}>
+              <Link style={styles.linkMenu} to='/owner/orders/'>
+                Data Pesanan
+              </Link>
+            </li>
+            <li tabIndex={0} style={styles.menuItemDashboard}>
+              <Link style={styles.linkMenu} to='/owner/devices/'>
+                Data Devices
+              </Link>
+            </li>
+            <li tabIndex={0} style={styles.menuItemSettings}>
+              <Link style={styles.linkMenu} to='/update-profile'>
+                Update Profile
+              </Link>
+            </li>
+            <li tabIndex={0} style={styles.logoutItemSettings}>
+              <form action='/logout' method='post'>
+                <button type='submit' style={styles.buttonLogout}>
+                  Logout
+                </button>
+              </form>
+            </li>
+          </ul>
+        </nav>
+        <Outlet />
+      </div>
+    </head>
   );
 }
 
@@ -156,5 +170,5 @@ const styles = {
     textDecoration: 'none',
     color: '#fff',
     fontSize: '0.95em',
-  }
+  },
 };

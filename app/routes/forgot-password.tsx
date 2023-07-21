@@ -13,10 +13,10 @@ export const meta: V2_MetaFunction = () => [{ title: 'Forgot Password' }];
 export async function loader({ request }: LoaderArgs) {
   // Parse cookies from the request headers
   const session = await storage.getSession(request.headers.get('Cookie'));
-  const getToken = session.get("token");
+  const getToken = session.get('token');
 
   if (getToken) {
-  const decodedToken = decodeToken(getToken) as { role: string } | null;
+    const decodedToken = decodeToken(getToken) as { role: string } | null;
 
     if (decodedToken && decodedToken.role == 'OWNER') {
       return redirect('/owner/');
@@ -41,13 +41,13 @@ export const action = async ({ request }: ActionArgs) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-					email: body.get('email')
-				}),
+          email: body.get('email'),
+        }),
       });
       return res.json();
     } catch (error) {
-			return error;
-		}
+      return error;
+    }
   };
 
   const response = await sendForgotPasswordToken();
@@ -93,23 +93,25 @@ const buttonStyle: React.CSSProperties = {
 };
 
 export default function ForgotPassword() {
-	const respForgotPassword = useActionData<typeof action>();
+  const respForgotPassword = useActionData<typeof action>();
   return (
-    <div style={forgotPasswordContainerStyle} className='forgot-password-container'>
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
-      <h2>Forgot Password</h2>
-      <Form style={forgotPasswordFormStyle} className='forgot-password-form' method='post'>
-        <label htmlFor='email' style={labelStyle}>
-          Email:
-        </label>
-        <input type='email' id='email' name='email' style={inputStyle} />
-        <br />
-        <button type='submit' style={buttonStyle}>
-          Submit
-        </button>
-      </Form>
-			{respForgotPassword?.status == 'error' && <p>{respForgotPassword?.message}</p>}
-			{respForgotPassword?.status == 'success' && <p>{respForgotPassword?.message}</p>}
-    </div>
+    <head>
+      <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
+      <div style={forgotPasswordContainerStyle} className='forgot-password-container'>
+        <h2>Forgot Password</h2>
+        <Form style={forgotPasswordFormStyle} className='forgot-password-form' method='post'>
+          <label htmlFor='email' style={labelStyle}>
+            Email:
+          </label>
+          <input type='email' id='email' name='email' style={inputStyle} />
+          <br />
+          <button type='submit' style={buttonStyle}>
+            Submit
+          </button>
+        </Form>
+        {respForgotPassword?.status == 'error' && <p>{respForgotPassword?.message}</p>}
+        {respForgotPassword?.status == 'success' && <p>{respForgotPassword?.message}</p>}
+      </div>
+    </head>
   );
 }

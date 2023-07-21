@@ -52,53 +52,55 @@ export async function loader({ request }: LoaderArgs) {
 export default function KasirOrder() {
   const order = useLoaderData();
   return (
-    <div style={main}>
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
-      <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
-      <div style={helper}>
-        <h2 style={heading}>Data Pesanan</h2>
-      </div>
-      <div style={tableContainer}>
-        <table style={table}>
-          <thead>
-            <tr>
-              <th style={th}>Kode Pesanan</th>
-              <th style={th}>Nomor Meja</th>
-              <th style={th}>Total Bayar</th>
-              <th style={th}>Nama</th>
-              <th style={th}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order.data.rows.map((data: any) => (
-              <tr key={data.id}>
-                <td style={td}>{data.order_code}</td>
-                <td style={td}>{data.table_number}</td>
-                <td style={td}>{data.payment_amount}</td>
-                <td style={td}>{data.name}</td>
-                <td style={td}>
-                  <a style={buttonDetail} href={`/kasir/details/${data.order_code}`}>
-                    Detail
-                  </a>
-                </td>
+    <head>
+      <meta http-equiv='Content-Security-Policy' content='upgrade-insecure-requests' />
+      <div style={main}>
+        <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
+        <div style={helper}>
+          <h2 style={heading}>Data Pesanan</h2>
+        </div>
+        <div style={tableContainer}>
+          <table style={table}>
+            <thead>
+              <tr>
+                <th style={th}>Kode Pesanan</th>
+                <th style={th}>Nomor Meja</th>
+                <th style={th}>Total Bayar</th>
+                <th style={th}>Nama</th>
+                <th style={th}>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      {/* <span style={span}>Breakpoints on 900px and 400px</span> */}
-      <div style={paginationContainer}>
-        <div style={pagination}>
-          <span style={paginationItem}>
-            <i className='ri-arrow-left-line'></i>
-          </span>
-          <div style={{ margin: '0 0.5rem' }}>Page 1 of 1</div>
-          <span style={paginationItem}>
-            <i className='ri-arrow-right-line'></i>
-          </span>
+            </thead>
+            <tbody>
+              {order.data.rows.map((data: any) => (
+                <tr key={data.id}>
+                  <td style={td}>{data.order_code}</td>
+                  <td style={td}>{data.table_number}</td>
+                  <td style={td}>{data.payment_amount}</td>
+                  <td style={td}>{data.name}</td>
+                  <td style={td}>
+                    <a style={buttonDetail} href={`/kasir/details/${data.order_code}`}>
+                      Detail
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* <span style={span}>Breakpoints on 900px and 400px</span> */}
+        <div style={paginationContainer}>
+          <div style={pagination}>
+            <span style={paginationItem}>
+              <i className='ri-arrow-left-line'></i>
+            </span>
+            <div style={{ margin: '0 0.5rem' }}>Page 1 of 1</div>
+            <span style={paginationItem}>
+              <i className='ri-arrow-right-line'></i>
+            </span>
+          </div>
         </div>
       </div>
-    </div>
+    </head>
   );
 }
 

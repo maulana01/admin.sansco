@@ -104,7 +104,7 @@ export default function AddUsers() {
 
   return (
     <div style={main}>
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
+
       <div style={helper}>
         <h2 style={heading}>Tambah Data User</h2>
       </div>
