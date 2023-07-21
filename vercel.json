@@ -1,16 +1,8 @@
 {
-  "version": 2,
-  "routes": [
-    {
-      "src": "/api/.*",
-      "dest": "/api/proxy.ts"
-    },
-    {
-      "src": ".*",
-      "dest": "/index.js"
+  "functions": {
+    "api/proxy.js": {
+      "memory": 3008,
+      "maxDuration": 60
     }
-  ],
-  "builds": [
-    { "src": "src/api/**/*.ts", "use": "@now/node" }
-  ]
+  }
 }
