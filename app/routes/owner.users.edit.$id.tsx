@@ -1,8 +1,10 @@
 /** @format */
 
+// owner.users.edit.$id.tsx
+
 import { ActionArgs, LoaderArgs, redirect } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { decodeToken } from 'react-jwt';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -20,9 +22,9 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const decodedToken = decodeToken(getToken) as { role: string } | null;
 
-  if (decodedToken && decodedToken.role == 'KOKI') {
+  if (decodedToken && decodedToken.role === 'KOKI') {
     return redirect('/koki/');
-  } else if (decodedToken && decodedToken.role == 'KASIR') {
+  } else if (decodedToken && decodedToken.role === 'KASIR') {
     return redirect('/kasir/');
   }
 
@@ -51,8 +53,6 @@ export const action = async ({ request, params }: ActionArgs) => {
     return { status: 'error', message: 'Form data is incomplete' };
   }
 
-  console.log('ini params', params.id);
-
   const updateUser = async () => {
     try {
       const res = await fetch(`/api/v1/users/${params.id}`, {
@@ -61,10 +61,10 @@ export const action = async ({ request, params }: ActionArgs) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: body.get('name') != '' && body.get('name'),
-          email: body.get('email') != '' && body.get('email'),
-          phone_number: body.get('phone_number') != '' && body.get('phone_number'),
-          role: body.get('role'),
+          name: body.get('name') || '',
+          email: body.get('email') || '',
+          phone_number: body.get('phone_number') || '',
+          role: body.get('role') || '',
         }),
       });
       return res.json();
@@ -73,53 +73,36 @@ export const action = async ({ request, params }: ActionArgs) => {
     }
   };
 
-  // console.log('adasd', updateUser());
-
   return updateUser();
 };
 
 export default function EditUsers() {
   const result = useActionData<typeof action>();
   const loaderResult = useLoaderData<typeof loader>();
-  console.log(result);
 
-  const notify = (data: string, type: 'success' | 'error' | 'warning' | 'info') => {
-    toast[type](data, {
-      autoClose: 2000,
-      position: toast.POSITION.TOP_RIGHT,
-      toastId: 'alertToast',
-    });
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const formData = new FormData(form);
-
-    if (formData.get('name') === '' || formData.get('phone_number') === '' || formData.get('email') === '') {
-      notify('Harap Lengkapi data!', 'error');
-      return;
+  useEffect(() => {
+    if (result) {
+      if (result.status === 'success') {
+        toast.success('Data user berhasil diubah!', {
+          autoClose: 2000,
+          position: toast.POSITION.TOP_RIGHT,
+          toastId: 'alertToast',
+        });
+        setTimeout(() => {
+          window.location.href = '/owner/';
+        }, 2500);
+      } else {
+        toast.error('Data user gagal diubah!', {
+          autoClose: 2000,
+          position: toast.POSITION.TOP_RIGHT,
+          toastId: 'alertToast',
+        });
+        setTimeout(() => {
+          window.location.href = `/owner/users/edit/${loaderResult.id}`;
+        }, 2500);
+      }
     }
-
-    // If the form is valid, call the 'load' function (which will trigger the 'action' function)
-    const response = await action({
-      request: new Request(`/api/v1/users/${loaderResult.data.id}`, { method: 'PATCH', body: formData }),
-      params: { id: loaderResult.data.id }, // Include the id in the params
-      context: {}, // Add an empty context object
-    });
-
-    if (response && response.status === 'success') {
-      notify('Data user berhasil diubah!', 'success');
-      setTimeout(() => {
-        window.location.href = '/owner/';
-      }, 2500);
-    } else {
-      notify('Data user gagal diubah!', 'error');
-      setTimeout(() => {
-        window.location.href = `/owner/users/edit/${loaderResult.data.id}`;
-      }, 2500);
-    }
-  };
+  }, [result]);
 
   return (
     <div style={main}>
@@ -128,23 +111,23 @@ export default function EditUsers() {
       </div>
       {/* Form section */}
       <div style={formContainer}>
-        <Form method='post' onSubmit={handleSubmit}>
+        <Form method='post' action={`/api/v1/users/${loaderResult.id}`} encType='multipart/form-data'>
           <label style={formLabel} htmlFor='dataInput'>
             Nama:
           </label>
-          <input style={formInput} type='text' id='dataInput' name='name' defaultValue={loaderResult.data.name} />
+          <input style={formInput} type='text' id='dataInput' name='name' defaultValue={loaderResult.name} />
           <label style={formLabel} htmlFor='dataInput'>
             Nomor Handphone:
           </label>
-          <input style={formInput} type='text' id='dataInput' name='phone_number' defaultValue={loaderResult.data.phone_number} />
+          <input style={formInput} type='text' id='dataInput' name='phone_number' defaultValue={loaderResult.phone_number} />
           <label style={formLabel} htmlFor='dataInput'>
             Email:
           </label>
-          <input style={formInput} type='email' id='dataInput' name='email' defaultValue={loaderResult.data.email} />
+          <input style={formInput} type='email' id='dataInput' name='email' defaultValue={loaderResult.email} />
           <label style={formLabel} htmlFor='dataInput'>
             Role:
           </label>
-          <select style={selectInputStyle} id='selectInput' name='role' defaultValue={loaderResult.data.role}>
+          <select style={selectInputStyle} id='selectInput' name='role' defaultValue={loaderResult.role}>
             <option value='OWNER'>Owner</option>
             <option value='KOKI'>Koki</option>
             <option value='KASIR'>Kasir</option>
@@ -158,6 +141,9 @@ export default function EditUsers() {
     </div>
   );
 }
+
+// The styles remain unchanged from your original code
+// ...
 
 const main: React.CSSProperties = {
   display: 'flex',
