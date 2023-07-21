@@ -11,7 +11,6 @@
     }
   ],
   "builds": [
-    { "src": "src/api/**/*.ts", "use": "@now/node" },
-    { "src": "src/**/*", "use": "@remix-run/build" }
+    { "src": "src/api/**/*.ts", "use": "@now/node" }
   ]
 }
