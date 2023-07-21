@@ -1,5 +1,7 @@
 /** @format */
 
+// proxy.js (moved to the root level of the project)
+
 import { createProxyMiddleware } from 'http-proxy-middleware';
 
 // Replace 'http://103.175.216.182:4000' with the actual URL of your HTTP API
