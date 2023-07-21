@@ -59,7 +59,6 @@ export const action = async ({ request, params }: ActionArgs) => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Content-Security-Policy': 'upgrade-insecure-requests',
         },
         body: JSON.stringify({
           name: body.get('name') != '' && body.get('name'),
