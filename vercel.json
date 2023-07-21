@@ -1,4 +1,17 @@
 {
-  "rewrites": [{ "source": "/api/(.*)", "destination": "/api/proxy.js" }],
-  "version": 2
+  "version": 2,
+  "routes": [
+    {
+      "src": "/api/.*",
+      "dest": "/api/proxy.ts"
+    },
+    {
+      "src": ".*",
+      "dest": "/index.js"
+    }
+  ],
+  "builds": [
+    { "src": "src/api/**/*.ts", "use": "@now/node" },
+    { "src": "src/**/*", "use": "@remix-run/build" }
+  ]
 }
