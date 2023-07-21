@@ -1,13 +1,19 @@
 {
   "version": 2,
+  "routes": [
+    {
+      "src": "/api/.*",
+      "dest": "/api/proxy.js"
+    },
+    {
+      "src": ".*",
+      "dest": "/index.js"
+    }
+  ],
   "functions": {
     "api/proxy.js": {
       "memory": 1024,
       "maxDuration": 10
     }
-  },
-  "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/proxy.js" },
-    { "source": ".*", "destination": "/index.js" }
-  ]
+  }
 }
