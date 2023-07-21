@@ -1,16 +1,28 @@
 /** @format */
 
-// proxy.js (moved to the root level of the project)
+// your-remixjs-project/api/proxy.js
 
-import { createProxyMiddleware } from 'http-proxy-middleware';
+const http = require('http');
 
 // Replace 'http://103.175.216.182:4000' with the actual URL of your HTTP API
-const apiProxy = createProxyMiddleware({
-  target: 'http://103.175.216.182:4000',
-  changeOrigin: true,
-});
+const targetURL = 'http://103.175.216.182:4000';
 
 export default function handler(req, res) {
-  // This will proxy any incoming request to the HTTP API
-  apiProxy(req, res);
+  const proxyReq = http.request(targetURL + req.url, {
+    method: req.method,
+    headers: req.headers,
+  });
+
+  req.pipe(proxyReq);
+
+  proxyReq.on('response', (proxyRes) => {
+    res.writeHead(proxyRes.statusCode, proxyRes.headers);
+    proxyRes.pipe(res);
+  });
+
+  proxyReq.on('error', (err) => {
+    console.error('Error occurred during proxying:', err);
+    res.statusCode = 500;
+    res.end('Server Error');
+  });
 }
