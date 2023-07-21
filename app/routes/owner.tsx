@@ -4,6 +4,7 @@ import { LoaderArgs } from '@remix-run/node';
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import React from 'react';
 import { decodeToken } from 'react-jwt';
+import { ToastContainer } from 'react-toastify';
 import { storage } from '~/utils/session.server';
 
 export async function loader({ request }: LoaderArgs) {
@@ -19,41 +20,47 @@ export default function Owner() {
   const tokenData = useLoaderData();
   return (
     <div style={styles.container}>
-      <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap' />
-      <link href='https://fonts.cdnfonts.com/css/helvetica-neue-5' rel='stylesheet' />
-      <nav style={menu} tabIndex={0}>
-        <header style={avatar}>
-          <img
-            src='https://d1fdloi71mui9q.cloudfront.net/S8ZFGu5CSESuNxb8PgVG_4I3acZO5E7rZ1AeJ'
-            alt='User Avatar'
-            style={styles.avatarImg}
-          />
-          <h3 style={{ color:'white' }}>{tokenData.name}</h3>
-        </header>
-        <ul>
-          <li tabIndex={0} style={styles.menuItemDashboard}>
-            <span>Dashboard</span>
-          </li>
-          <li tabIndex={0} style={styles.menuItemCustomers}>
-            <span>Customers</span>
-          </li>
-          <li tabIndex={0} style={styles.menuItemUsers}>
-            <span>Users</span>
-          </li>
-          <li tabIndex={0} style={styles.menuItemSettings}>
-            <span>Settings</span>
-          </li>
-          <li tabIndex={0} style={styles.logoutItemSettings}>
-            <form action='/logout' method='post'>
-              <button type='submit' style={styles.buttonLogout}>
-                Logout
-              </button>
-            </form>
-          </li>
-        </ul>
-      </nav>
-      <Outlet />
-    </div>
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap' />
+    <link href='https://fonts.cdnfonts.com/css/helvetica-neue-5' rel='stylesheet' />
+    <nav style={menu} tabIndex={0}>
+      <header style={avatar}>
+        <img
+          src='https://d1fdloi71mui9q.cloudfront.net/S8ZFGu5CSESuNxb8PgVG_4I3acZO5E7rZ1AeJ'
+          alt='User Avatar'
+          style={styles.avatarImg}
+        />
+        <h3 style={{ color:'white' }}>{tokenData.name}</h3>
+      </header>
+      <ul>
+        <li tabIndex={0} style={styles.menuItemDashboard}>
+          <Link style={styles.linkMenu} to="/">Data User</Link>
+        </li>
+        <li tabIndex={0} style={styles.menuItemDashboard}>
+          <Link style={styles.linkMenu} to="/owner/categories/">Data Kategori Menu</Link>
+        </li>
+        <li tabIndex={0} style={styles.menuItemDashboard}>
+          <Link style={styles.linkMenu} to="/owner/menus/">Data Menu</Link>
+        </li>
+        <li tabIndex={0} style={styles.menuItemDashboard}>
+          <Link style={styles.linkMenu} to="/owner/orders/">Data Pesanan</Link>
+        </li>
+        <li tabIndex={0} style={styles.menuItemDashboard}>
+          <Link style={styles.linkMenu} to="/owner/devices/">Data Devices</Link>
+        </li>
+        <li tabIndex={0} style={styles.menuItemSettings}>
+          <Link style={styles.linkMenu} to="/update-profile">Update Profile</Link>
+        </li>
+        <li tabIndex={0} style={styles.logoutItemSettings}>
+          <form action='/logout' method='post'>
+            <button type='submit' style={styles.buttonLogout}>
+              Logout
+            </button>
+          </form>
+        </li>
+      </ul>
+    </nav>
+    <Outlet />
+  </div>
   );
 }
 
@@ -82,7 +89,7 @@ const styles = {
     boxShadow: '0 0 0 4px rgba(59, 43, 51, 1)',
   },
   menuItemDashboard: {
-    padding: '0.5em 1em 0.5em 3em',
+    padding: '0.5em 0 0.5em 1em',
     fontSize: '0.95em',
     fontWeight: 'normal',
     backgroundRepeat: 'no-repeat',
@@ -91,10 +98,9 @@ const styles = {
     backgroundSize: 'auto 20px',
     transition: 'all 0.15s linear',
     cursor: 'pointer',
-    backgroundImage: 'url("http://www.entypo.com/images//gauge.svg")',
   },
   menuItemCustomers: {
-    padding: '0.5em 1em 0.5em 3em',
+    padding: '0.5em 0 0.5em 1em',
     fontSize: '0.95em',
     fontWeight: 'normal',
     backgroundRepeat: 'no-repeat',
@@ -103,10 +109,9 @@ const styles = {
     transition: 'all 0.15s linear',
     color: '#fff',
     cursor: 'pointer',
-    backgroundImage: 'url("http://www.entypo.com/images//briefcase.svg")',
   },
   menuItemUsers: {
-    padding: '0.5em 1em 0.5em 3em',
+    padding: '0.5em 0 0.5em 1em',
     fontSize: '0.95em',
     fontWeight: 'normal',
     backgroundRepeat: 'no-repeat',
@@ -115,10 +120,9 @@ const styles = {
     transition: 'all 0.15s linear',
     color: '#fff',
     cursor: 'pointer',
-    backgroundImage: 'url("http://www.entypo.com/images//users.svg")',
   },
   menuItemSettings: {
-    padding: '0.5em 1em 0.5em 3em',
+    padding: '0.5em 0 0.5em 1em',
     fontSize: '0.95em',
     fontWeight: 'normal',
     backgroundRepeat: 'no-repeat',
@@ -127,10 +131,9 @@ const styles = {
     backgroundSize: 'auto 20px',
     transition: 'all 0.15s linear',
     cursor: 'pointer',
-    backgroundImage: 'url("http://www.entypo.com/images//tools.svg")',
   },
   logoutItemSettings: {
-    padding: '0.5em 1em 0.5em 2.6em',
+    padding: '0.5em 0 0.5em 0.6em',
     fontSize: '0.95em',
     fontWeight: 'normal',
     backgroundRepeat: 'no-repeat',
@@ -138,7 +141,6 @@ const styles = {
     backgroundSize: 'auto 20px',
     transition: 'all 0.15s linear',
     cursor: 'pointer',
-    backgroundImage: 'url("http://www.entypo.com/images//exit.svg")',
   },
   buttonLogout: {
     background: 'none',
@@ -149,4 +151,9 @@ const styles = {
     cursor: 'pointer',
     outline: 'none',
   },
+  linkMenu: {
+    textDecoration: 'none',
+    color: '#fff',
+    fontSize: '0.95em',
+  }
 };

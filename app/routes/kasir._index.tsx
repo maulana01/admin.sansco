@@ -51,7 +51,6 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function KasirOrder() {
   const order = useLoaderData();
-  console.log('order', order);
   return (
     <div style={main}>
       <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
