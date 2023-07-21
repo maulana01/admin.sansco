@@ -28,11 +28,10 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const getUser = async () => {
     try {
-      const res = await fetch(`http://103.175.216.182:4000/api/v1/users/${params.id}`, {
+      const res = await fetch(`/api/v1/users/${params.id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
         },
       });
       return res.json();
@@ -56,11 +55,10 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   const updateUser = async () => {
     try {
-      const res = await fetch(`http://103.175.216.182:4000/api/v1/users/${params.id}`, {
+      const res = await fetch(`/api/v1/users/${params.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify({
           name: body.get('name') != '' && body.get('name'),
