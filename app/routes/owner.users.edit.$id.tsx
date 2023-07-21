@@ -59,6 +59,7 @@ export const action = async ({ request, params }: ActionArgs) => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'Content-Security-Policy': 'upgrade-insecure-requests',
         },
         body: JSON.stringify({
           name: body.get('name') != '' && body.get('name'),
@@ -123,7 +124,6 @@ export default function EditUsers() {
 
   return (
     <div style={main}>
-      <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"/>
       <div style={helper}>
         <h2 style={heading}>Update Data User</h2>
       </div>
