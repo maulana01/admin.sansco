@@ -59,6 +59,8 @@ export const action = async ({ request, params }: ActionArgs) => {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
         },
         body: JSON.stringify({
           name: body.get('name') != '' && body.get('name'),
