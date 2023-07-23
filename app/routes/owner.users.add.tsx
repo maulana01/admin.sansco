@@ -39,7 +39,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   const addUser = async () => {
     try {
-      const res = await fetch('http://103.175.216.182:4000/api/v1/users/', {
+      const res = await fetch('https://mail.apisansco.my.id/api/v1/users/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

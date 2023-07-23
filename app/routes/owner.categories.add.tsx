@@ -43,7 +43,7 @@ export const action = async ({ request }: ActionArgs) => {
 			formData.append('name', body.get('name') as string);
       formData.append('image', body.get('image') as Blob);
 
-      const res = await fetch('http://103.175.216.182:4000/api/v1/categories/', {
+      const res = await fetch('https://mail.apisansco.my.id/api/v1/categories/', {
         method: 'POST',
         body: formData,
       });

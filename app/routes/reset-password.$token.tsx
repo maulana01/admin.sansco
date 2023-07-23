@@ -29,7 +29,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const checkTokenReset = async () => {
     try {
-      const res = await fetch(`http://103.175.216.182:4000/api/v1/auth/check-token/${params.token}`, {
+      const res = await fetch(`https://mail.apisansco.my.id/api/v1/auth/check-token/${params.token}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ export const action = async ({ request }: ActionArgs) => {
   const resetPassword = async () => {
     try {
       // const email = useLoaderData();
-      const res = await fetch('http://103.175.216.182:4000/api/v1/auth/reset-password', {
+      const res = await fetch('https://mail.apisansco.my.id/api/v1/auth/reset-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

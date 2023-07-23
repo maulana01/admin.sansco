@@ -29,7 +29,7 @@ export default function FinishedOrders() {
   const [finishedOrder, setFinishedOrder] = useState([]);
   useEffect(() => {
     const fetchFinishedOrder = async () => {
-      const response = await fetch('http://103.175.216.182:4000/api/v1/orders/finished-orders', {
+      const response = await fetch('https://mail.apisansco.my.id/api/v1/orders/finished-orders', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

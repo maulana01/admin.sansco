@@ -29,7 +29,7 @@ export default function ProcessedOrdes() {
   const [processedOrder, setProcessedOrder] = useState([]);
   useEffect(() => {
     const fetchProcessedOrder = async () => {
-      const response = await fetch('http://103.175.216.182:4000/api/v1/orders/processed-orders', {
+      const response = await fetch('https://mail.apisansco.my.id/api/v1/orders/processed-orders', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

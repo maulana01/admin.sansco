@@ -34,7 +34,7 @@ export async function loader({ request }: LoaderArgs) {
     try {
       // const page = 1;
       // const limit = 10;
-      const response = await fetch(`http://103.175.216.182:4000/api/v1/categories/`, {
+      const response = await fetch(`https://mail.apisansco.my.id/api/v1/categories/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export async function action({ request }: LoaderArgs) {
 
   const deleteCategory = async () => {
     try {
-      const res = await fetch(`http://103.175.216.182:4000/api/v1/categories/${body.get('id')}`, {
+      const res = await fetch(`https://mail.apisansco.my.id/api/v1/categories/${body.get('id')}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

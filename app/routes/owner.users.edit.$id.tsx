@@ -28,7 +28,7 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const getUser = async () => {
     try {
-      const res = await fetch(`http://103.175.216.182:4000/api/v1/users/${params.id}`, {
+      const res = await fetch(`https://mail.apisansco.my.id/api/v1/users/${params.id}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -55,7 +55,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   const updateUser = async () => {
     try {
-      const res = await fetch(`http://103.175.216.182:4000/api/v1/users/${params.id}`, {
+      const res = await fetch(`https://mail.apisansco.my.id/api/v1/users/${params.id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
