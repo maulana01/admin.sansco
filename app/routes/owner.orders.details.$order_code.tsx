@@ -18,8 +18,8 @@ export async function loader({ request, params }: LoaderArgs) {
 
   const decodedToken = decodeToken(getToken) as { role: string } | null;
 
-  if (decodedToken && decodedToken.role == 'OWNER') {
-    return redirect('/owner/');
+  if (decodedToken && decodedToken.role == 'KASIR') {
+    return redirect('/kasir/');
   } else if (decodedToken && decodedToken.role == 'KOKI') {
     return redirect('/koki/');
   }
@@ -65,7 +65,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     const response = await cancelOrder();
 
     if (response.status === 'success') {
-      return redirect('/kasir/');
+      return redirect('/owner/orders/');
     }
 
     // console.log('ini data', response);
@@ -88,7 +88,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     let response = await confirmPayOrder();
 
     if (response.status === 'success') {
-      return redirect('/kasir/');
+      return redirect('/owner/orders/');
     }
 
     // console.log('ini data', response);
@@ -202,7 +202,7 @@ export default function OrderDetails() {
           )}
         </Form>
         <button style={button} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-          <a href='/kasir' style={styles.buttonLink}>
+          <a href='/owner/orders/' style={styles.buttonLink}>
             Kembali
           </a>
         </button>

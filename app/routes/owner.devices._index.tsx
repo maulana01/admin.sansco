@@ -30,11 +30,11 @@ export async function loader({ request }: LoaderArgs) {
     return redirect('/kasir/');
   }
 
-  const fetchMenus = async () => {
+  const fetchDevices = async () => {
     try {
       // const page = 1;
       // const limit = 10;
-      const response = await fetch(`https://mail.apisansco.my.id/api/v1/menus/`, {
+      const response = await fetch(`https://mail.apisansco.my.id/api/v1/devices/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -48,16 +48,16 @@ export async function loader({ request }: LoaderArgs) {
     }
   };
 
-  return await fetchMenus();
+  return await fetchDevices();
 }
 
 export async function action({ request }: LoaderArgs) {
   // Get the form data from the request
   const body = await request.formData();
 
-  const deletemenu = async () => {
+  const deleteDevice = async () => {
     try {
-      const res = await fetch(`https://mail.apisansco.my.id/api/v1/menus/${body.get('id')}`, {
+      const res = await fetch(`https://mail.apisansco.my.id/api/v1/devices/${body.get('id')}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export async function action({ request }: LoaderArgs) {
     }
   };
 
-  const response = await deletemenu();
+  const response = await deleteDevice();
 
   return response;
 }
@@ -84,7 +84,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onConfirmDelete }) => {
     <div style={modalOverlay}>
       <div style={modalContainer}>
         <h3 style={modalHeading}>Hapus Data</h3>
-        <p style={modalText}>Apakah Anda yakin ingin menghapus data Kategori Menu?</p>
+        <p style={modalText}>Apakah Anda yakin ingin menghapus data device?</p>
         <div style={modalButtons}>
           <button style={modalButton} onClick={onClose}>
             Cancel
@@ -104,17 +104,10 @@ const Modal: React.FC<ModalProps> = ({ onClose, onConfirmDelete }) => {
   );
 };
 
-export default function Menus() {
-  const menus = useLoaderData();
+export default function Devices() {
+  const devices = useLoaderData();
   const [showModal, setShowModal] = useState(false);
-  const [menuIdToDelete, setMenuIdToDelete] = useState<string | null>(null);
-
-  const rupiah: any = (number: any) => {
-    return new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-    }).format(number);
-  };
+  const [deviceIdToDelete, setDeviceIdToDelete] = useState<string | null>(null);
 
   const notify = (data: string, type: 'success' | 'error' | 'warning' | 'info') => {
     toast[type](data, {
@@ -129,12 +122,12 @@ export default function Menus() {
   };
 
   const onDeleteConfirmed = async () => {
-    if (!menuIdToDelete) {
+    if (!deviceIdToDelete) {
       return;
     }
 
     const formData = new FormData();
-    formData.append('id', menuIdToDelete);
+    formData.append('id', deviceIdToDelete);
 
     const response = await action({
       request: new Request('/', { method: 'POST', body: formData }),
@@ -143,12 +136,12 @@ export default function Menus() {
     });
 
     if (response && response.status === 'success') {
-      notify('Data menu berhasil dihapus!', 'success');
+      notify('Data device berhasil dihapus!', 'success');
       setTimeout(() => {
         window.location.reload();
       }, 2500);
     } else {
-      notify('Data menu gagal dihapus!', 'error');
+      notify('Data device gagal dihapus!', 'error');
       setTimeout(() => {
         window.location.reload();
       }, 2500);
@@ -159,176 +152,62 @@ export default function Menus() {
   };
 
   return (
-    <div style={main}>
-      <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
-      <div style={helper}>
-        <h2 style={heading}>Data Menu</h2>
-      </div>
-      {/* create button */}
-      <div style={buttonContainer}>
-        <a style={button} href='/owner/menus/add'>
-          Tambah Data
-        </a>
-      </div>
-      <div style={tableContainer}>
-        <table style={table}>
-          <thead>
-            <tr>
-              <th style={th}>Nama</th>
-              <th style={th}>Gambar</th>
-              <th style={th}>Harga</th>
-              <th style={th}>Kategori</th>
-              <th style={th}>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {menus.data.map((data: any) => (
-              <tr key={data.id}>
-                <td style={td}>{data.name}</td>
-                <td style={td}>
-                  {/* <a href={data.image} target='_blank'>Link Gambar</a> */}
-                  <img src={data.image} width={100} alt={data.name} />
-                </td>
-                <td style={td}>{rupiah(data.price)}</td>
-                <td style={td}>{data.items.name}</td>
-                <td style={td}>
-                  {' '}
-                  {/* Move the <div> to a <td> */}
-                  <a style={buttonDetail} href={`/owner/menus/edit/${data.id}`}>
-                    Update
-                  </a>
-                  <button
-                    style={buttonDelete}
-                    onClick={() => {
-                      setMenuIdToDelete(data.id);
-                      setShowModal(true); // Show the modal when the "Delete" button is clicked
-                    }}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-            <tr>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-            </tr>
-            <tr>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-            </tr>
-            <tr>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-            </tr>
-            <tr>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-            </tr>
-            <tr>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-            </tr>
-            <tr>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-              <td style={td}>
-                adasd
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      {/* <span style={span}>Breakpoints on 900px and 400px</span> */}
-      <div style={paginationContainer}>
-        <div style={pagination}>
-          <span style={paginationItem}>
-            <i className='ri-arrow-left-line'></i>
-          </span>
-          <div style={{ margin: '0 0.5rem' }}>Page 1 of 1</div>
-          <span style={paginationItem}>
-            <i className='ri-arrow-right-line'></i>
-          </span>
+      <div style={main}>
+        <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
+        <div style={helper}>
+          <h2 style={heading}>Data Pesanan</h2>
         </div>
+        {/* create button */}
+        <div style={tableContainer}>
+          <table style={table}>
+            <thead>
+              <tr>
+                <th style={th}>Device Id</th>
+                <th style={th}>Device Brand</th>
+                <th style={th}>Device Name</th>
+                <th style={th}>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {devices.data.map((data: any) => (
+                <tr key={data.id}>
+                  <td style={td}>{data.device_id}</td>
+                  <td style={td}>{data.device_brand}</td>
+                  <td style={td}>{data.device_name}</td>
+                  <div style={td}>
+                    <td>
+                      {/* Pass the user ID to setDeviceIdToDelete */}
+                      <button
+                        style={buttonDelete}
+                        onClick={() => {
+                          setDeviceIdToDelete(data.id);
+                          setShowModal(true); // Show the modal when the "Delete" button is clicked
+                        }}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </div>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        {/* <span style={span}>Breakpoints on 900px and 400px</span> */}
+        <div style={paginationContainer}>
+          <div style={pagination}>
+            <span style={paginationItem}>
+              <i className='ri-arrow-left-line'></i>
+            </span>
+            <div style={{ margin: '0 0.5rem' }}>Page 1 of 1</div>
+            <span style={paginationItem}>
+              <i className='ri-arrow-right-line'></i>
+            </span>
+          </div>
+        </div>
+        {showModal && <Modal onClose={closeModal} onConfirmDelete={onDeleteConfirmed} />}
+        <ToastContainer />
       </div>
-      {showModal && <Modal onClose={closeModal} onConfirmDelete={onDeleteConfirmed} />}
-      <ToastContainer />
-    </div>
   );
 }
 
@@ -416,7 +295,7 @@ const table: React.CSSProperties = {
   borderRadius: '5px',
   overflow: 'hidden',
   boxShadow: '0 0 0 1px rgba(0, 0, 0, 0.1)',
-  marginBottom: '2rem',
+  marginBottom: '1rem',
   fontSize: '0.9rem',
   fontWeight: 400,
   color: '#333',
@@ -439,7 +318,7 @@ const paginationContainer: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center', // Center the pagination horizontally
-  width: '75vw',
+  width: '70vw',
   backgroundColor: '#f5f5f5',
   position: 'absolute',
   bottom: '1rem', // Adjust the distance from the bottom as needed
@@ -504,5 +383,4 @@ const buttonDelete: React.CSSProperties = {
   fontSize: '15px',
   cursor: 'pointer',
   borderRadius: '5px',
-  marginLeft: '7px',
 };

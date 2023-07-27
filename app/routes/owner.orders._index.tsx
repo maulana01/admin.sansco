@@ -1,7 +1,7 @@
 /** @format */
 
 import { LoaderArgs, redirect } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import { useLoaderData, useSearchParams } from '@remix-run/react';
 import { useEffect, useState } from 'react';
 import { decodeToken } from 'react-jwt';
 import { storage } from '~/utils/session.server';
@@ -22,8 +22,8 @@ export async function loader({ request }: LoaderArgs) {
 
   const decodedToken = decodeToken(getToken) as { role: string } | null;
 
-  if (decodedToken && decodedToken.role == 'OWNER') {
-    return redirect('/owner/');
+  if (decodedToken && decodedToken.role == 'KASIR') {
+    return redirect('/kasir/');
   } else if (decodedToken && decodedToken.role == 'KOKI') {
     return redirect('/koki/');
   }
@@ -41,34 +41,27 @@ export async function loader({ request }: LoaderArgs) {
     if (startDate != '' && endDate != '') {
       if (filterStatusQuery != '') {
         result = `,startDate=gt.${startDate},endDate=lt.${endDate}`;
-      } else {
-        result = `startDate=gt.${startDate},endDate=lt.${endDate}`;
       }
+      result = `startDate=gt.${startDate},endDate=lt.${endDate}`;
     } else if (startDate != '' && endDate == '') {
       if (filterStatusQuery != '') {
         result = `,startDate=gt.${startDate},endDate=lt.${removeCurrentDateTime}`;
-      } else {
-        result = `startDate=gt.${startDate},endDate=lt.${removeCurrentDateTime}`;
       }
+      result = `startDate=gt.${startDate},endDate=lt.${removeCurrentDateTime}`;
     } else if (startDate == '' && endDate != '') {
       const endDateYesterdays = new Date(endDate);
       endDateYesterdays.setDate(endDateYesterdays.getDate() + -1);
       const removeEndDateYesterdaysTime = endDateYesterdays.toISOString().split('T')[0];
       if (filterStatusQuery != '') {
         result = `,startDate=gt.${removeEndDateYesterdaysTime},endDate=lt.${endDate}`;
-      } else {
-        result = `startDate=gt.${removeEndDateYesterdaysTime},endDate=lt.${endDate}`;
       }
+      result = `startDate=gt.${removeEndDateYesterdaysTime},endDate=lt.${endDate}`;
     }
     return result;
   };
 
   const filterStartDateQuery = searchParams.get('startDate') || '';
   const filterEndDateQuery = searchParams.get('endDate') || '';
-  // const filterQuery =
-  //   (filterStatusQuery && `status=iLike.${filterStatusQuery},`) +
-  //   (filterStartDateQuery && `startDate=gt.${filterStartDateQuery}`) +
-  //   (filterEndDateQuery && `,endDate=lt.${filterEndDateQuery}`);
   const filterQuery =
     (filterStatusQuery && `status=iLike.${filterStatusQuery}`) +
     ((filterStartDateQuery || filterEndDateQuery) && validateDateQuery(filterStartDateQuery, filterEndDateQuery));
@@ -84,7 +77,7 @@ export async function loader({ request }: LoaderArgs) {
         search: String(searchQuery),
         filter: String(filterQuery),
       }).toString();
-      console.log('query string', queryString);
+      // console.log('query string', queryString);
       const response = await fetch(`https://mail.apisansco.my.id/api/v1/orders/?${queryString}`, {
         method: 'GET',
         headers: {
@@ -92,7 +85,7 @@ export async function loader({ request }: LoaderArgs) {
         },
       });
       const data = await response.json();
-      console.log('Data fetched:', data);
+      // console.log('Data fetched:', data);
       return data;
     } catch (error) {
       console.log('Error:', error);
@@ -102,7 +95,7 @@ export async function loader({ request }: LoaderArgs) {
   return await fetchOrder();
 }
 
-export default function KasirOrder() {
+export default function OwnerOrder() {
   const order = useLoaderData();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -126,7 +119,7 @@ export default function KasirOrder() {
       startDate: startDate ? formatDate(startDate) : '',
       endDate: endDate ? formatDate(endDate) : '',
     }).toString();
-    window.location.href = `/kasir/?${queryString}`;
+    window.location.href = `/owner/orders/?${queryString}`;
   };
 
   const calculateTotalBayarSum = (data: any) => {
@@ -242,7 +235,7 @@ export default function KasirOrder() {
                 <td style={td}>{data.payment_amount}</td>
                 <td style={td}>{data.name}</td>
                 <td style={td}>
-                  <a style={buttonDetail} href={`/kasir/details/${data.order_code}`}>
+                  <a style={buttonDetail} href={`/owner/orders/details/${data.order_code}`}>
                     Detail
                   </a>
                 </td>

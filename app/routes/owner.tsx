@@ -58,7 +58,7 @@ export default function Owner() {
               </Link>
             </li>
             <li tabIndex={0} style={styles.menuItemSettings}>
-              <Link style={styles.linkMenu} to='/update-profile'>
+              <Link style={styles.linkMenu} to='/update-profile/'>
                 Update Profile
               </Link>
             </li>

@@ -55,7 +55,6 @@ export default function Koki() {
 
   return (
     <div style={styles.container}>
-
       <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap' />
       <link href='https://fonts.cdnfonts.com/css/helvetica-neue-5' rel='stylesheet' />
       <nav style={menu} tabIndex={0}>

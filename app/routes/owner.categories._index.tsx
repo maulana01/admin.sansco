@@ -153,10 +153,9 @@ export default function Categories() {
 
   return (
     <div style={main}>
-
       <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
       <div style={helper}>
-        <h2 style={heading}>Data Pesanan</h2>
+        <h2 style={heading}>Data Kategori Menu</h2>
       </div>
       {/* create button */}
       <div style={buttonContainer}>
@@ -181,25 +180,20 @@ export default function Categories() {
                   {/* <a href={data.image} target='_blank'>Link Gambar</a> */}
 									<img src={data.image} width={100} alt={data.name} />
                 </td>
-                <div style={td}>
-                  <td>
-                    <a style={buttonDetail} href={`/owner/categories/edit/${data.id}`}>
-                      Update
-                    </a>
-                  </td>
-                  <td>
-                    {/* Pass the category ID to setCategoryIdToDelete */}
-                    <button
-                      style={buttonDelete}
-                      onClick={() => {
-                        setCategoryIdToDelete(data.id);
-                        setShowModal(true); // Show the modal when the "Delete" button is clicked
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </div>
+                <td style={td}> {/* Move the <div> to a <td> */}
+                  <a style={buttonDetail} href={`/owner/categories/edit/${data.id}`}>
+                    Update
+                  </a>
+                  <button
+                    style={buttonDelete}
+                    onClick={() => {
+                      setCategoryIdToDelete(data.id);
+                      setShowModal(true); // Show the modal when the "Delete" button is clicked
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -395,4 +389,5 @@ const buttonDelete: React.CSSProperties = {
   fontSize: '15px',
   cursor: 'pointer',
   borderRadius: '5px',
+  marginLeft: '7px',
 };
