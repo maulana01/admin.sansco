@@ -38,8 +38,7 @@ export async function loader({ request, params }: LoaderArgs) {
     }
   };
 
-  const response = await fetchOrderDetail();
-  return response;
+  return { token: decodedToken, orderDetail: await fetchOrderDetail() };
 }
 
 export const action = async ({ request, params }: ActionArgs) => {
@@ -55,6 +54,9 @@ export const action = async ({ request, params }: ActionArgs) => {
           headers: {
             'Content-Type': 'application/json',
           },
+          body: JSON.stringify({
+            user_ids: body.get('user_ids'),
+          }),
         });
         return res.json();
       } catch (error) {
@@ -115,43 +117,53 @@ const rupiah: any = (number: any) => {
 };
 
 export default function OrderDetails() {
-  const { data } = useLoaderData();
+  const { token, orderDetail } = useLoaderData();
+  console.log('ini token', orderDetail);
 
   return (
     <div style={main}>
-
       <div style={helper}>
         <h2>Detail Pesanan</h2>
       </div>
       <div style={styles.details}>
         <p style={styles.detailItem}>
           <span style={styles.label}>Kode Pesanan</span> <span style={{ fontWeight: 'bold', marginLeft: '5.25rem' }}>:</span>{' '}
-          {data.Pesanan.order_code}
+          {orderDetail.data.Pesanan.order_code}
         </p>
         <p style={styles.detailItem}>
           <span style={styles.label}>Nomor Meja</span> <span style={{ fontWeight: 'bold', marginLeft: '6.4rem' }}>:</span>{' '}
-          {data.Pesanan.table_number}
+          {orderDetail.data.Pesanan.table_number}
         </p>
         <p style={styles.detailItem}>
           <span style={styles.label}>Total Bayar</span> <span style={{ fontWeight: 'bold', marginLeft: '7.1rem' }}>:</span>{' '}
-          {rupiah(data.Pesanan.payment_amount)}
+          {rupiah(orderDetail.data.Pesanan.payment_amount)}
         </p>
         <p style={styles.detailItem}>
-          <span style={styles.label}>Status</span> <span style={{ fontWeight: 'bold', marginLeft: '10.85rem' }}>:</span> {data.Pesanan.status}
+          <span style={styles.label}>Status</span> <span style={{ fontWeight: 'bold', marginLeft: '10.85rem' }}>:</span>{' '}
+          {orderDetail.data.Pesanan.status}
         </p>
         <p style={styles.detailItem}>
-          <span style={styles.label}>Nama</span> <span style={{ fontWeight: 'bold', marginLeft: '11.1rem' }}>:</span> {data.Pesanan.name}
+          <span style={styles.label}>Nama</span> <span style={{ fontWeight: 'bold', marginLeft: '11.1rem' }}>:</span>{' '}
+          {orderDetail.data.Pesanan.name}
         </p>
         <p style={styles.detailItem}>
           <span style={styles.label}>Metode Pembayaran</span> <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>:</span>
-          {data.Pesanan.payment_method.charAt(0).toUpperCase()}
-          {data.Pesanan.payment_method.slice(1)}
+          {orderDetail.data.Pesanan.payment_method.charAt(0).toUpperCase()}
+          {orderDetail.data.Pesanan.payment_method.slice(1)}
         </p>
+        {orderDetail.data.Pesanan.user_ids ? (
+          <p style={styles.detailItem}>
+            <span style={styles.label}>Pesanan Dibuat Oleh</span> <span style={{ fontWeight: 'bold', marginLeft:'-0.15rem' }}>:</span>{' '}
+            {orderDetail.data.ProcessedBy}
+          </p>
+        ) : (
+          ''
+        )}
         <p style={styles.detailItem}>
           <span style={styles.label}>Detail Pesanan</span> <span style={{ fontWeight: 'bold', marginLeft: '4.35rem' }}>:</span>
         </p>
         <ul style={styles.detailsOrder}>
-          {data['Detail Pesanan'].map((item: any) => (
+          {orderDetail.data['Detail Pesanan'].map((item: any) => (
             <li key={item.id}>
               <p style={styles.detailItem}>
                 <span style={styles.label}>- {item.menu_ref.name}</span> (x{item.qty})
@@ -162,25 +174,28 @@ export default function OrderDetails() {
       </div>
       <div style={styles.buttonContainer}>
         <Form method='post'>
-          {data.Pesanan.status === 'Pesanan Sudah Dibayar' ? (
+          {orderDetail.data.Pesanan.status === 'Pesanan Sudah Dibayar' ? (
+            <div>
+              <input type='hidden' name='user_ids' defaultValue={token.id} />
+              <button
+                type='submit'
+                name='status'
+                style={button}
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+                value={orderDetail.data.Pesanan.status}
+              >
+                Proses Pesanan
+              </button>
+            </div>
+          ) : orderDetail.data.Pesanan.status === 'Pesanan Sedang Diproses' ? (
             <button
               type='submit'
               name='status'
               style={button}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
-              value={data.Pesanan.status}
-            >
-              Proses Pesanan
-            </button>
-          ) : data.Pesanan.status === 'Pesanan Sedang Diproses' ? (
-            <button
-              type='submit'
-              name='status'
-              style={button}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              value={data.Pesanan.status}
+              value={orderDetail.data.Pesanan.status}
             >
               Selesaikan Pesanan
             </button>
@@ -189,11 +204,11 @@ export default function OrderDetails() {
           )}
         </Form>
         <button style={button} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-          {data.Pesanan.status === 'Pesanan Sudah Dibayar' ? (
+          {orderDetail.data.Pesanan.status === 'Pesanan Sudah Dibayar' ? (
             <a href='/koki' style={styles.buttonLink}>
               Kembali
             </a>
-          ) : data.Pesanan.status === 'Pesanan Sedang Diproses' ? (
+          ) : orderDetail.data.Pesanan.status === 'Pesanan Sedang Diproses' ? (
             <a href='/koki/list-processed-orders' style={styles.buttonLink}>
               Kembali
             </a>
