@@ -7,7 +7,7 @@ import { decodeToken } from 'react-jwt';
 import { storage } from '~/utils/session.server';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 import * as FileSaver from 'file-saver';
 
 export async function loader({ request }: LoaderArgs) {
@@ -72,12 +72,14 @@ export async function loader({ request }: LoaderArgs) {
   const filterQuery =
     (filterStatusQuery && `status=iLike.${filterStatusQuery}`) +
     ((filterStartDateQuery || filterEndDateQuery) && validateDateQuery(filterStartDateQuery, filterEndDateQuery));
+  const page = parseInt(searchParams.get('page') || '1', 10); // Get the page number from the query parameter
+  const limit = 7;
   // console.log('filterquery', filterQuery);
 
   const fetchOrder = async () => {
     try {
-      const page = 1;
-      const limit = 7;
+      // const page = String(page);
+      // const limit = String(limit);
       const queryString = new URLSearchParams({
         page: String(page),
         limit: String(limit),
@@ -109,6 +111,18 @@ export default function KasirOrder() {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
+  // const handlePaginationClick = (page: number) => {
+  //   // Redirect to the same page with the new page number as a query parameter
+  //   const queryString = new URLSearchParams({
+  //     search: searchQuery,
+  //     status: statusFilter,
+  //     startDate: startDate ? formatDate(startDate) : '',
+  //     endDate: endDate ? formatDate(endDate) : '',
+  //     page: String(page), // New page number
+  //   }).toString();
+  //   window.location.href = `/kasir/?${queryString}`;
+  // };
+
   const formatDate = (date: Date | null) => {
     if (date) {
       const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
@@ -119,14 +133,30 @@ export default function KasirOrder() {
 
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Redirect to the same page with the search query as a query parameter
     const queryString = new URLSearchParams({
       search: searchQuery,
       status: statusFilter,
       startDate: startDate ? formatDate(startDate) : '',
       endDate: endDate ? formatDate(endDate) : '',
+      page: '1', // Reset page to 1 on search
     }).toString();
+
+    // Redirect to the URL with the new queryString
     window.location.href = `/kasir/?${queryString}`;
+  };
+
+  const handlePaginationClick = (page: number) => {
+    // Parse the existing query string from the URL
+    const currentSearchParams = new URLSearchParams(window.location.search);
+
+    // Update the 'page' parameter in the existing query string
+    currentSearchParams.set('page', String(page));
+
+    // Get the updated query string
+    const updatedQueryString = currentSearchParams.toString();
+
+    // Redirect to the URL with the updated query string
+    window.location.href = `/kasir/?${updatedQueryString}`;
   };
 
   const calculateTotalBayarSum = (data: any) => {
@@ -137,54 +167,83 @@ export default function KasirOrder() {
     return sum;
   };
 
-  const exportToExcel = () => {
-    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    const fileExtension = '.xlsx';
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Sheet 1');
 
-    // Create a new blank XLSX Document
-    let workbook = XLSX.utils.book_new();
+    // Set the title in the first cell of the first row
+    const titleCell = worksheet.getCell('A1');
+    titleCell.value = 'Data Pesanan - ' + new Date().toISOString().split('T')[0];
+    titleCell.font = { bold: true, size: 20 };
+    titleCell.alignment = { horizontal: 'center' };
+    worksheet.mergeCells('A1:E1'); // Merge cells for the title row
 
-    const data = order.forExportData.map((data: any, index: number) => ({
-      'No. Pesanan': index + 1,
-      'Nama Pemesan': data.name,
-      'Tanggal Pesanan': new Date(data.createdAt).toISOString().split('T')[0],
-      'Status Pesanan': data.status,
-      'Total Bayar': data.payment_amount,
-    }));
+    // Add headers to the worksheet
+    const headerRow = worksheet.addRow(['No. Pesanan', 'Nama Pemesan', 'Tanggal Pesanan', 'Status Pesanan', 'Total Bayar']);
 
-    const sum = calculateTotalBayarSum(order.forExportData);
-    const summaryRow = {
-      'No. Pesanan': 'Total :',
-      'Nama Pemesan': '',
-      'Tanggal Pesanan': '',
-      'Status Pesanan': '',
-      'Total Bayar': sum,
-    };
+    // Style the header row
+    headerRow.eachCell((cell) => {
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'EEEEEE' } }; // Light Gray background color
+      cell.font = { bold: true };
+      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }; // Thin border around cells
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    });
 
-    const wsData = [...data, summaryRow];
-    const ws = XLSX.utils.json_to_sheet(wsData);
+    // Add data to the worksheet
+    // let arr: any = order.forExportData.filter(
+    //   (data: any) => data.status !== 'Pesanan Dibatalkan' && data.status !== 'Menunggu Pelanggan Untuk Memesan'
+    // );
 
-    // Apply custom styling to the "Total Bayar" cell
-    const totalBayarCellRef = XLSX.utils.encode_cell({ c: 0, r: data.length + 1 }); // Corrected cell reference for "Total Bayar" cell
-    ws[totalBayarCellRef].s = {
-      alignment: {
-        horizontal: 'center',
-        vertical: 'center',
-      },
-      font: {
-        bold: true,
-      },
-      // Add any other styling options you want here
-    };
+    order.forExportData.forEach((data: any, index: number) => {
+      const row = worksheet.addRow([
+        index + 1,
+        data.name,
+        new Date(data.createdAt).toISOString().split('T')[0],
+        data.status,
+        data.payment_amount ? Number(data.payment_amount) : Number(0),
+      ]);
+      // Style the data rows
+      row.eachCell((cell) => {
+        cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }; // Thin border around cells
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      });
+    });
 
-    ws['!merges'] = [{ s: { c: 0, r: data.length + 1 }, e: { c: 3, r: data.length + 1 } }]; // Merge cells for the summary row
+    let arr: any = [];
+    order.forExportData.forEach((data: any) => {
+      data.payment_amount = data.payment_amount ? Number(data.payment_amount) : Number(0);
+      arr.push(data);
+    });
 
-    // Append the worksheet to the workbook
-    XLSX.utils.book_append_sheet(workbook, ws, 'Sheet 1');
+    // Add the "Total :" row
+    const sum = calculateTotalBayarSum(arr);
+    const totalRow = worksheet.addRow(['Total :', '', '', '', sum]);
 
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array', cellStyles: true });
-    const excelData = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(excelData, `Data Pesanan ${new Date().toISOString().split('T')[0]}` + fileExtension);
+    // Style the "Total :" row
+    totalRow.eachCell((cell) => {
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFC0' } }; // Yellow background color
+      cell.font = { bold: true };
+      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'double' }, right: { style: 'thin' } }; // Thick bottom border for total row
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    });
+
+    // Merge cells for the "Total :" row
+    worksheet.mergeCells(`A${totalRow.number}:D${totalRow.number}`);
+
+    // Auto-fit column widths
+    worksheet.columns.forEach((column) => {
+      column.width = column.width ?? 15;
+    });
+
+    // Style the "Status Pesanan" column to wrap text
+    const statusColumn = worksheet.getColumn('D');
+    statusColumn.width = 20; // Set the initial width to accommodate some text
+    statusColumn.alignment = { wrapText: true, horizontal: 'center', vertical: 'middle' };
+
+    // Save the workbook to a file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const excelData = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    FileSaver.saveAs(excelData, `Data Pesanan ${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
   return (
@@ -239,7 +298,7 @@ export default function KasirOrder() {
               <tr key={data.id}>
                 <td style={td}>{data.order_code}</td>
                 <td style={td}>{data.table_number}</td>
-                <td style={td}>{data.payment_amount}</td>
+                <td style={td}>{data.payment_amount ? data.payment_amount : 'Belum Melakukan Pemesanan'}</td>
                 <td style={td}>{data.name}</td>
                 <td style={td}>
                   <a style={buttonDetail} href={`/kasir/details/${data.order_code}`}>
@@ -254,11 +313,27 @@ export default function KasirOrder() {
       {/* <span style={span}>Breakpoints on 900px and 400px</span> */}
       <div style={paginationContainer}>
         <div style={pagination}>
-          <span style={paginationItem}>
+          <span
+            style={{
+              ...paginationItem,
+              cursor: order.current_page == 1 ? 'not-allowed' : 'pointer',
+              pointerEvents: order.current_page == 1 ? 'none' : 'auto',
+            }}
+            onClick={() => handlePaginationClick(Number(order.current_page) - 1)} // Go to the previous page
+          >
             <i className='ri-arrow-left-line'></i>
           </span>
-          <div style={{ margin: '0 0.5rem' }}>Page 1 of 1</div>
-          <span style={paginationItem}>
+          <div style={{ margin: '0 0.5rem' }}>
+            Page {order.current_page} of {order.total_pages}
+          </div>
+          <span
+            style={{
+              ...paginationItem,
+              cursor: order.current_page == order.total_pages ? 'not-allowed' : 'pointer',
+              pointerEvents: order.current_page == order.total_pages ? 'none' : 'auto',
+            }}
+            onClick={() => handlePaginationClick(Number(order.current_page) + 1)} // Go to the next page
+          >
             <i className='ri-arrow-right-line'></i>
           </span>
         </div>

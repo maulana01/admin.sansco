@@ -155,7 +155,7 @@ export default function home() {
       <div style={main}>
         <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
         <div style={helper}>
-          <h2 style={heading}>Data Pesanan</h2>
+          <h2 style={heading}>Data Pengguna</h2>
         </div>
         {/* create button */}
         <div style={buttonContainer}>

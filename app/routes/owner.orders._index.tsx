@@ -7,8 +7,9 @@ import { decodeToken } from 'react-jwt';
 import { storage } from '~/utils/session.server';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import * as XLSX from 'xlsx';
+import ExcelJS from 'exceljs';
 import * as FileSaver from 'file-saver';
+import { ToastContainer, toast } from 'react-toastify';
 
 export async function loader({ request }: LoaderArgs) {
   // Parse cookies from the request headers
@@ -41,21 +42,24 @@ export async function loader({ request }: LoaderArgs) {
     if (startDate != '' && endDate != '') {
       if (filterStatusQuery != '') {
         result = `,startDate=gt.${startDate},endDate=lt.${endDate}`;
+      } else {
+        result = `startDate=gt.${startDate},endDate=lt.${endDate}`;
       }
-      result = `startDate=gt.${startDate},endDate=lt.${endDate}`;
     } else if (startDate != '' && endDate == '') {
       if (filterStatusQuery != '') {
         result = `,startDate=gt.${startDate},endDate=lt.${removeCurrentDateTime}`;
+      } else {
+        result = `startDate=gt.${startDate},endDate=lt.${removeCurrentDateTime}`;
       }
-      result = `startDate=gt.${startDate},endDate=lt.${removeCurrentDateTime}`;
     } else if (startDate == '' && endDate != '') {
       const endDateYesterdays = new Date(endDate);
       endDateYesterdays.setDate(endDateYesterdays.getDate() + -1);
       const removeEndDateYesterdaysTime = endDateYesterdays.toISOString().split('T')[0];
       if (filterStatusQuery != '') {
         result = `,startDate=gt.${removeEndDateYesterdaysTime},endDate=lt.${endDate}`;
+      } else {
+        result = `startDate=gt.${removeEndDateYesterdaysTime},endDate=lt.${endDate}`;
       }
-      result = `startDate=gt.${removeEndDateYesterdaysTime},endDate=lt.${endDate}`;
     }
     return result;
   };
@@ -67,17 +71,20 @@ export async function loader({ request }: LoaderArgs) {
     ((filterStartDateQuery || filterEndDateQuery) && validateDateQuery(filterStartDateQuery, filterEndDateQuery));
   // console.log('filterquery', filterQuery);
 
+  const page = parseInt(searchParams.get('page') || '1', 10); // Get the page number from the query parameter
+  const limit = 7;
+
   const fetchOrder = async () => {
     try {
-      const page = 1;
-      const limit = 7;
+      // const page = String(page);
+      // const limit = String(limit);
       const queryString = new URLSearchParams({
         page: String(page),
         limit: String(limit),
         search: String(searchQuery),
         filter: String(filterQuery),
       }).toString();
-      // console.log('query string', queryString);
+      console.log('query string', queryString);
       const response = await fetch(`https://mail.apisansco.my.id/api/v1/orders/?${queryString}`, {
         method: 'GET',
         headers: {
@@ -85,7 +92,7 @@ export async function loader({ request }: LoaderArgs) {
         },
       });
       const data = await response.json();
-      // console.log('Data fetched:', data);
+      console.log('Data fetched:', data);
       return data;
     } catch (error) {
       console.log('Error:', error);
@@ -95,12 +102,109 @@ export async function loader({ request }: LoaderArgs) {
   return await fetchOrder();
 }
 
+export async function action({ request }: LoaderArgs) {
+  // Get the form data from the request
+  const body = await request.formData();
+
+  const deleteOrder = async () => {
+    try {
+      const res = await fetch(`https://mail.apisansco.my.id/api/v1/orders/${body.get('id')}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      return res.json();
+    } catch (error) {
+      return error;
+    }
+  };
+
+  const response = await deleteOrder();
+
+  return response;
+}
+
+interface ModalProps {
+  onClose: () => void;
+  onConfirmDelete: () => void;
+}
+
+const Modal: React.FC<ModalProps> = ({ onClose, onConfirmDelete }) => {
+  return (
+    <div style={modalOverlay}>
+      <div style={modalContainer}>
+        <h3 style={modalHeading}>Hapus Data</h3>
+        <p style={modalText}>Apakah Anda yakin ingin menghapus data pesanan?</p>
+        <div style={modalButtons}>
+          <button style={modalButton} onClick={onClose}>
+            Cancel
+          </button>
+          <button
+            style={modalButton}
+            onClick={() => {
+              onConfirmDelete();
+              onClose();
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function OwnerOrder() {
   const order = useLoaderData();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [orderIdToDelete, setOrderIdToDelete] = useState<string | null>(null);
+
+  const notify = (data: string, type: 'success' | 'error' | 'warning' | 'info') => {
+    toast[type](data, {
+      autoClose: 2000,
+      position: toast.POSITION.TOP_RIGHT,
+      toastId: 'alertToast',
+    });
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
+  const onDeleteConfirmed = async () => {
+    if (!orderIdToDelete) {
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('id', orderIdToDelete);
+
+    const response = await action({
+      request: new Request('/', { method: 'POST', body: formData }),
+      context: {},
+      params: {},
+    });
+
+    if (response && response.status === 'success') {
+      notify('Data pesanan berhasil dihapus!', 'success');
+      setTimeout(() => {
+        window.location.reload();
+      }, 2500);
+    } else {
+      notify('Data pesanan gagal dihapus!', 'error');
+      setTimeout(() => {
+        window.location.reload();
+      }, 2500);
+    }
+
+    // Close the modal after the deletion process
+    closeModal();
+  };
 
   const formatDate = (date: Date | null) => {
     if (date) {
@@ -114,12 +218,27 @@ export default function OwnerOrder() {
     e.preventDefault();
     // Redirect to the same page with the search query as a query parameter
     const queryString = new URLSearchParams({
+      page: '1', // Reset page to 1 on search
       search: searchQuery,
       status: statusFilter,
       startDate: startDate ? formatDate(startDate) : '',
       endDate: endDate ? formatDate(endDate) : '',
     }).toString();
     window.location.href = `/owner/orders/?${queryString}`;
+  };
+
+  const handlePaginationClick = (page: number) => {
+    // Parse the existing query string from the URL
+    const currentSearchParams = new URLSearchParams(window.location.search);
+
+    // Update the 'page' parameter in the existing query string
+    currentSearchParams.set('page', String(page));
+
+    // Get the updated query string
+    const updatedQueryString = currentSearchParams.toString();
+
+    // Redirect to the URL with the updated query string
+    window.location.href = `/owner/orders/?${updatedQueryString}`;
   };
 
   const calculateTotalBayarSum = (data: any) => {
@@ -130,54 +249,83 @@ export default function OwnerOrder() {
     return sum;
   };
 
-  const exportToExcel = () => {
-    const fileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-    const fileExtension = '.xlsx';
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Sheet 1');
 
-    // Create a new blank XLSX Document
-    let workbook = XLSX.utils.book_new();
+    // Set the title in the first cell of the first row
+    const titleCell = worksheet.getCell('A1');
+    titleCell.value = 'Data Pesanan - ' + new Date().toISOString().split('T')[0];
+    titleCell.font = { bold: true, size: 20 };
+    titleCell.alignment = { horizontal: 'center' };
+    worksheet.mergeCells('A1:E1'); // Merge cells for the title row
 
-    const data = order.forExportData.map((data: any, index: number) => ({
-      'No. Pesanan': index + 1,
-      'Nama Pemesan': data.name,
-      'Tanggal Pesanan': new Date(data.createdAt).toISOString().split('T')[0],
-      'Status Pesanan': data.status,
-      'Total Bayar': data.payment_amount,
-    }));
+    // Add headers to the worksheet
+    const headerRow = worksheet.addRow(['No. Pesanan', 'Nama Pemesan', 'Tanggal Pesanan', 'Status Pesanan', 'Total Bayar']);
 
-    const sum = calculateTotalBayarSum(order.forExportData);
-    const summaryRow = {
-      'No. Pesanan': 'Total :',
-      'Nama Pemesan': '',
-      'Tanggal Pesanan': '',
-      'Status Pesanan': '',
-      'Total Bayar': sum,
-    };
+    // Style the header row
+    headerRow.eachCell((cell) => {
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'EEEEEE' } }; // Light Gray background color
+      cell.font = { bold: true };
+      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }; // Thin border around cells
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    });
 
-    const wsData = [...data, summaryRow];
-    const ws = XLSX.utils.json_to_sheet(wsData);
+    // Add data to the worksheet
+    // let arr: any = order.forExportData.filter(
+    //   (data: any) => data.status !== 'Pesanan Dibatalkan' && data.status !== 'Menunggu Pelanggan Untuk Memesan'
+    // );
 
-    // Apply custom styling to the "Total Bayar" cell
-    const totalBayarCellRef = XLSX.utils.encode_cell({ c: 0, r: data.length + 1 }); // Corrected cell reference for "Total Bayar" cell
-    ws[totalBayarCellRef].s = {
-      alignment: {
-        horizontal: 'center',
-        vertical: 'center',
-      },
-      font: {
-        bold: true,
-      },
-      // Add any other styling options you want here
-    };
+    order.forExportData.forEach((data: any, index: number) => {
+      const row = worksheet.addRow([
+        index + 1,
+        data.name,
+        new Date(data.createdAt).toISOString().split('T')[0],
+        data.status,
+        data.payment_amount ? Number(data.payment_amount) : Number(0),
+      ]);
+      // Style the data rows
+      row.eachCell((cell) => {
+        cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'thin' }, right: { style: 'thin' } }; // Thin border around cells
+        cell.alignment = { horizontal: 'center', vertical: 'middle' };
+      });
+    });
 
-    ws['!merges'] = [{ s: { c: 0, r: data.length + 1 }, e: { c: 3, r: data.length + 1 } }]; // Merge cells for the summary row
+    let arr: any = [];
+    order.forExportData.forEach((data: any) => {
+      data.payment_amount = data.payment_amount ? Number(data.payment_amount) : Number(0);
+      arr.push(data);
+    });
 
-    // Append the worksheet to the workbook
-    XLSX.utils.book_append_sheet(workbook, ws, 'Sheet 1');
+    // Add the "Total :" row
+    const sum = calculateTotalBayarSum(arr);
+    const totalRow = worksheet.addRow(['Total :', '', '', '', sum]);
 
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array', cellStyles: true });
-    const excelData = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(excelData, `Data Pesanan ${new Date().toISOString().split('T')[0]}` + fileExtension);
+    // Style the "Total :" row
+    totalRow.eachCell((cell) => {
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFC0' } }; // Yellow background color
+      cell.font = { bold: true };
+      cell.border = { top: { style: 'thin' }, left: { style: 'thin' }, bottom: { style: 'double' }, right: { style: 'thin' } }; // Thick bottom border for total row
+      cell.alignment = { horizontal: 'center', vertical: 'middle' };
+    });
+
+    // Merge cells for the "Total :" row
+    worksheet.mergeCells(`A${totalRow.number}:D${totalRow.number}`);
+
+    // Auto-fit column widths
+    worksheet.columns.forEach((column) => {
+      column.width = column.width ?? 15;
+    });
+
+    // Style the "Status Pesanan" column to wrap text
+    const statusColumn = worksheet.getColumn('D');
+    statusColumn.width = 20; // Set the initial width to accommodate some text
+    statusColumn.alignment = { wrapText: true, horizontal: 'center', vertical: 'middle' };
+
+    // Save the workbook to a file
+    const buffer = await workbook.xlsx.writeBuffer();
+    const excelData = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    FileSaver.saveAs(excelData, `Data Pesanan ${new Date().toISOString().split('T')[0]}.xlsx`);
   };
 
   return (
@@ -232,13 +380,26 @@ export default function OwnerOrder() {
               <tr key={data.id}>
                 <td style={td}>{data.order_code}</td>
                 <td style={td}>{data.table_number}</td>
-                <td style={td}>{data.payment_amount}</td>
-                <td style={td}>{data.name}</td>
-                <td style={td}>
-                  <a style={buttonDetail} href={`/owner/orders/details/${data.order_code}`}>
-                    Detail
-                  </a>
-                </td>
+                <td style={td}>{data.payment_amount ? data.payment_amount : '-'}</td>
+                <td style={td}>{data.name ? data.name : '-'}</td>
+                <div style={td}>
+                  <td>
+                    <a style={buttonDetail} href={`/owner/orders/details/${data.order_code}`}>
+                      Detail
+                    </a>
+                  </td>
+                  <td>
+                    <button
+                      style={buttonDelete}
+                      onClick={() => {
+                        setOrderIdToDelete(data.order_code);
+                        setShowModal(true); // Show the modal when the "Delete" button is clicked
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </div>
               </tr>
             ))}
           </tbody>
@@ -247,14 +408,32 @@ export default function OwnerOrder() {
       {/* <span style={span}>Breakpoints on 900px and 400px</span> */}
       <div style={paginationContainer}>
         <div style={pagination}>
-          <span style={paginationItem}>
+          <span
+            style={{
+              ...paginationItem,
+              cursor: order.current_page == 1 ? 'not-allowed' : 'pointer',
+              pointerEvents: order.current_page == 1 ? 'none' : 'auto',
+            }}
+            onClick={() => handlePaginationClick(Number(order.current_page) - 1)} // Go to the previous page
+          >
             <i className='ri-arrow-left-line'></i>
           </span>
-          <div style={{ margin: '0 0.5rem' }}>Page 1 of 1</div>
-          <span style={paginationItem}>
+          <div style={{ margin: '0 0.5rem' }}>
+            Page {order.current_page} of {order.total_pages}
+          </div>
+          <span
+            style={{
+              ...paginationItem,
+              cursor: order.current_page == order.total_pages ? 'not-allowed' : 'pointer',
+              pointerEvents: order.current_page == order.total_pages ? 'none' : 'auto',
+            }}
+            onClick={() => handlePaginationClick(Number(order.current_page) + 1)} // Go to the next page
+          >
             <i className='ri-arrow-right-line'></i>
           </span>
         </div>
+        {showModal && <Modal onClose={closeModal} onConfirmDelete={onDeleteConfirmed} />}
+        <ToastContainer />
       </div>
     </div>
   );
@@ -376,9 +555,65 @@ const buttonDetail: React.CSSProperties = {
   border: 'none',
   color: 'white',
   padding: '5px 10px',
+  marginRight: '5px',
   textAlign: 'center',
   textDecoration: 'none',
   display: 'inline-block',
   fontSize: '12px',
+  borderRadius: '5px',
+};
+
+// Styles for the modal
+const modalOverlay: React.CSSProperties = {
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  background: 'rgba(0, 0, 0, 0.6)',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  zIndex: 9999,
+};
+
+const modalContainer: React.CSSProperties = {
+  background: '#fff',
+  borderRadius: '5px',
+  padding: '1rem',
+  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+};
+
+const modalHeading: React.CSSProperties = {
+  margin: '0',
+  fontSize: '1.2rem',
+};
+
+const modalText: React.CSSProperties = {
+  margin: '1rem 0',
+};
+
+const modalButtons: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'flex-end',
+};
+
+const modalButton: React.CSSProperties = {
+  padding: '0.5rem 1rem',
+  marginLeft: '0.5rem',
+  cursor: 'pointer',
+};
+// Styles for the modal
+
+const buttonDelete: React.CSSProperties = {
+  backgroundColor: '#f44336',
+  border: 'none',
+  color: 'white',
+  padding: '5px 10px',
+  textAlign: 'center',
+  textDecoration: 'none',
+  display: 'inline-block',
+  fontSize: '13px',
+  cursor: 'pointer',
   borderRadius: '5px',
 };
