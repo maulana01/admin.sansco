@@ -7,6 +7,9 @@ import { decodeToken } from 'react-jwt';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { storage } from '~/utils/session.server';
+import type { V2_MetaFunction } from '@vercel/remix';
+
+export const meta: V2_MetaFunction = () => [{ title: 'Update User | Dashboard Owner' }];
 
 export async function loader({ request, params }: LoaderArgs) {
   // Parse cookies from the request headers

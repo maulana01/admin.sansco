@@ -5,6 +5,9 @@ import { useLoaderData, Form } from '@remix-run/react';
 import React, { useEffect, useState } from 'react';
 import { decodeToken } from 'react-jwt';
 import { storage } from '~/utils/session.server';
+import type { V2_MetaFunction } from '@vercel/remix';
+
+export const meta: V2_MetaFunction = () => [{ title: 'Detail Pesanan | Dashboard Kasir' }];
 
 export async function loader({ request, params }: LoaderArgs) {
   // Parse cookies from the request headers

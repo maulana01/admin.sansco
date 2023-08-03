@@ -10,6 +10,9 @@ import 'react-datepicker/dist/react-datepicker.css';
 import ExcelJS from 'exceljs';
 import * as FileSaver from 'file-saver';
 import { ToastContainer, toast } from 'react-toastify';
+import type { V2_MetaFunction } from '@vercel/remix';
+
+export const meta: V2_MetaFunction = () => [{ title: 'Daftar Pesanan | Dashboard Owner' }];
 
 export async function loader({ request }: LoaderArgs) {
   // Parse cookies from the request headers
@@ -332,7 +335,7 @@ export default function OwnerOrder() {
     <div style={main}>
       <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
       <div style={helper}>
-        <h2 style={heading}>Data Pesanan</h2>
+        <h2 style={heading}>Daftar Pesanan</h2>
       </div>
       <div style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
         <form onSubmit={handleSearch}>

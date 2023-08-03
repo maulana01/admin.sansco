@@ -10,7 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';
 
 // export const config = { runtime: 'edge' };
 
-export const meta: V2_MetaFunction = () => [{ title: 'Home | Dashboard Owner' }];
+export const meta: V2_MetaFunction = () => [{ title: 'Daftar Pengguna | Dashboard Owner' }];
 
 export async function loader({ request }: LoaderArgs) {
   // Parse cookies from the request headers
@@ -155,7 +155,7 @@ export default function home() {
       <div style={main}>
         <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
         <div style={helper}>
-          <h2 style={heading}>Data Pengguna</h2>
+          <h2 style={heading}>Daftar Data Pengguna</h2>
         </div>
         {/* create button */}
         <div style={buttonContainer}>

@@ -4,6 +4,9 @@ import { LoaderArgs, redirect } from '@remix-run/node';
 import { useEffect, useState } from 'react';
 import { decodeToken } from 'react-jwt';
 import { storage } from '~/utils/session.server';
+import type { V2_MetaFunction } from '@vercel/remix';
+
+export const meta: V2_MetaFunction = () => [{ title: 'Daftar Pesanan yang Sudah Dibayar | Dashboard Koki' }];
 
 export async function loader({ request }: LoaderArgs) {
   // Parse cookies from the request headers
@@ -52,7 +55,7 @@ export default function PaidOrders() {
 
       <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
       <div style={helper}>
-        <h2 style={heading}>Data Pesanan yang Sudah Dibayar</h2>
+        <h2 style={heading}>Daftar Pesanan yang Sudah Dibayar</h2>
       </div>
       <div style={tableContainer}>
         <table style={table}>

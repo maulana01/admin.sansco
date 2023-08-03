@@ -8,7 +8,7 @@ import { redirect, LoaderArgs, ActionArgs } from '@remix-run/node';
 
 // export const config = { runtime: 'edge' };
 
-export const meta: V2_MetaFunction = () => [{ title: 'Forgot Password' }];
+export const meta: V2_MetaFunction = () => [{ title: 'Reset Password' }];
 
 export async function loader({ request, params }: LoaderArgs) {
   // Parse cookies from the request headers
