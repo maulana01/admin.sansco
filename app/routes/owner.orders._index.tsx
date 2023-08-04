@@ -87,7 +87,7 @@ export async function loader({ request }: LoaderArgs) {
         search: String(searchQuery),
         filter: String(filterQuery),
       }).toString();
-      console.log('query string', queryString);
+      // console.log('query string', queryString);
       const response = await fetch(`https://mail.apisansco.my.id/api/v1/orders/?${queryString}`, {
         method: 'GET',
         headers: {
@@ -95,7 +95,7 @@ export async function loader({ request }: LoaderArgs) {
         },
       });
       const data = await response.json();
-      console.log('Data fetched:', data);
+      // console.log('Data fetched:', data);
       return data;
     } catch (error) {
       console.log('Error:', error);
@@ -385,24 +385,20 @@ export default function OwnerOrder() {
                 <td style={td}>{data.table_number}</td>
                 <td style={td}>{data.payment_amount ? data.payment_amount : '-'}</td>
                 <td style={td}>{data.name ? data.name : '-'}</td>
-                <div style={td}>
-                  <td>
-                    <a style={buttonDetail} href={`/owner/orders/details/${data.order_code}`}>
-                      Detail
-                    </a>
-                  </td>
-                  <td>
-                    <button
-                      style={buttonDelete}
-                      onClick={() => {
-                        setOrderIdToDelete(data.order_code);
-                        setShowModal(true); // Show the modal when the "Delete" button is clicked
-                      }}
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </div>
+                <td style={td}>
+                  <a style={buttonDetail} href={`/owner/orders/details/${data.order_code}`}>
+                    Detail
+                  </a>
+                  <button
+                    style={buttonDelete}
+                    onClick={() => {
+                      setOrderIdToDelete(data.order_code);
+                      setShowModal(true); // Show the modal when the "Delete" button is clicked
+                    }}
+                  >
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -435,9 +431,9 @@ export default function OwnerOrder() {
             <i className='ri-arrow-right-line'></i>
           </span>
         </div>
-        {showModal && <Modal onClose={closeModal} onConfirmDelete={onDeleteConfirmed} />}
-        <ToastContainer />
       </div>
+      {showModal && <Modal onClose={closeModal} onConfirmDelete={onDeleteConfirmed} />}
+      <ToastContainer />
     </div>
   );
 }

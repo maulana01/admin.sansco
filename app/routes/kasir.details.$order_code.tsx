@@ -149,30 +149,32 @@ export default function OrderDetails() {
         </p>
         <p style={styles.detailItem}>
           <span style={styles.label}>Total Bayar</span> <span style={{ fontWeight: 'bold', marginLeft: '7.1rem' }}>:</span>{' '}
-          {rupiah(data.Pesanan.payment_amount)}
+          {data.Pesanan.payment_amount ? rupiah(data.Pesanan.payment_amount) : '-'}
         </p>
         <p style={styles.detailItem}>
           <span style={styles.label}>Status</span> <span style={{ fontWeight: 'bold', marginLeft: '10.85rem' }}>:</span> {data.Pesanan.status}
         </p>
         <p style={styles.detailItem}>
-          <span style={styles.label}>Nama</span> <span style={{ fontWeight: 'bold', marginLeft: '11.1rem' }}>:</span> {data.Pesanan.name}
+          <span style={styles.label}>Nama</span> <span style={{ fontWeight: 'bold', marginLeft: '11.1rem' }}>:</span>{' '}
+          {data.Pesanan.name ? data.Pesanan.name : '-'}
         </p>
         <p style={styles.detailItem}>
           <span style={styles.label}>Metode Pembayaran</span> <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>:</span>
-          {data.Pesanan.payment_method.charAt(0).toUpperCase()}
-          {data.Pesanan.payment_method.slice(1)}
+          {data.Pesanan.payment_method ? data.Pesanan.payment_method.charAt(0).toUpperCase() : '-'}
+          {data.Pesanan.payment_method ? data.Pesanan.payment_method.slice(1) : ''}
         </p>
         <p style={styles.detailItem}>
           <span style={styles.label}>Detail Pesanan</span> <span style={{ fontWeight: 'bold', marginLeft: '4.35rem' }}>:</span>
         </p>
         <ul style={styles.detailsOrder}>
-          {data['Detail Pesanan'].map((item: any) => (
-            <li key={item.id}>
-              <p style={styles.detailItem}>
-                <span style={styles.label}>- {item.menu_ref.name}</span> (x{item.qty})
-              </p>
-            </li>
-          ))}
+          {data.Pesanan.payment_amount &&
+            data['Detail Pesanan'].map((item: any) => (
+              <li key={item.id}>
+                <p style={styles.detailItem}>
+                  <span style={styles.label}>- {item.menu_ref.name}</span> (x{item.qty})
+                </p>
+              </li>
+            ))}
         </ul>
       </div>
       <div style={styles.buttonContainer}>

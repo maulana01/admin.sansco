@@ -35,7 +35,9 @@ export async function loader({ request, params }: LoaderArgs) {
           'Content-Type': 'application/json',
         },
       });
-      return res.json();
+      const data = await res.json();
+      // console.log('Data fetched:', data);
+      return data;
     } catch (error) {
       return error;
     }
@@ -155,7 +157,8 @@ export default function OrderDetails() {
           <span style={styles.label}>Status</span> <span style={{ fontWeight: 'bold', marginLeft: '10.85rem' }}>:</span> {data.Pesanan.status}
         </p>
         <p style={styles.detailItem}>
-          <span style={styles.label}>Nama</span> <span style={{ fontWeight: 'bold', marginLeft: '11.1rem' }}>:</span> {data.Pesanan.name ? data.Pesanan.name : '-'}
+          <span style={styles.label}>Nama</span> <span style={{ fontWeight: 'bold', marginLeft: '11.1rem' }}>:</span>{' '}
+          {data.Pesanan.name ? data.Pesanan.name : '-'}
         </p>
         <p style={styles.detailItem}>
           <span style={styles.label}>Metode Pembayaran</span> <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>:</span>
@@ -166,13 +169,14 @@ export default function OrderDetails() {
           <span style={styles.label}>Detail Pesanan</span> <span style={{ fontWeight: 'bold', marginLeft: '4.35rem' }}>:</span>
         </p>
         <ul style={styles.detailsOrder}>
-          {data.Pesanan.payment_amount ?? data['Detail Pesanan'].map((item: any) => (
-            <li key={item.id}>
-              <p style={styles.detailItem}>
-                <span style={styles.label}>- {item.menu_ref.name}</span> (x{item.qty})
-              </p>
-            </li>
-          ))}
+          {data.Pesanan.payment_amount &&
+            data['Detail Pesanan'].map((item: any) => (
+              <li key={item.id}>
+                <p style={styles.detailItem}>
+                  <span style={styles.label}>- {item.menu_ref.name}</span> (x{item.qty})
+                </p>
+              </li>
+            ))}
         </ul>
       </div>
       <div style={styles.buttonContainer}>

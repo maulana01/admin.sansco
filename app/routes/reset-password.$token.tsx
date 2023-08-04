@@ -76,7 +76,7 @@ export const action = async ({ request }: ActionArgs) => {
     return redirect('/login');
   }
 
-  console.log('ini data', response);
+  // console.log('ini data', response);
   // console.log(decodedToken);
 
   return response;

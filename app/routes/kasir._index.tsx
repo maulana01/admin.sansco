@@ -89,7 +89,7 @@ export async function loader({ request }: LoaderArgs) {
         search: String(searchQuery),
         filter: String(filterQuery),
       }).toString();
-      console.log('query string', queryString);
+      // console.log('query string', queryString);
       const response = await fetch(`https://mail.apisansco.my.id/api/v1/orders/?${queryString}`, {
         method: 'GET',
         headers: {
@@ -97,7 +97,7 @@ export async function loader({ request }: LoaderArgs) {
         },
       });
       const data = await response.json();
-      console.log('Data fetched:', data);
+      // console.log('Data fetched:', data);
       return data;
     } catch (error) {
       console.log('Error:', error);
@@ -137,11 +137,11 @@ export default function KasirOrder() {
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const queryString = new URLSearchParams({
+      page: '1', // Reset page to 1 on search
       search: searchQuery,
       status: statusFilter,
       startDate: startDate ? formatDate(startDate) : '',
       endDate: endDate ? formatDate(endDate) : '',
-      page: '1', // Reset page to 1 on search
     }).toString();
 
     // Redirect to the URL with the new queryString
@@ -261,7 +261,7 @@ export default function KasirOrder() {
             type='text'
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={searchInput}
+            style={{ ...searchInput }}
             placeholder='Search by order code or name'
           />
           <button type='submit' style={searchButton}>

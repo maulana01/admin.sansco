@@ -37,7 +37,7 @@ export default function Koki() {
       console.log('Koki disconnected');
     });
     socket.on('pay-order', async (data) => {
-      console.log('PAID ORDER', data);
+      // console.log('PAID ORDER', data);
       audio.src = paidOrdersSound;
       audio.play();
       notify();

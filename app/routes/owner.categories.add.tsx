@@ -63,7 +63,7 @@ export const action = async ({ request }: ActionArgs) => {
 export default function AddCategories() {
   const result = useActionData<typeof action>();
 	const [previewImage, setPreviewImage] = useState<string | null>(null); // State to hold the preview image URL
-  console.log(result);
+  // console.log(result);
 
   const notify = (data: string, type: 'success' | 'error' | 'warning' | 'info') => {
     toast[type](data, {

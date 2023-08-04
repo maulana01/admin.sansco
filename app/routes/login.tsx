@@ -75,7 +75,7 @@ export const action = async ({ request }: ActionArgs) => {
     }
   }
 
-  console.log('ini data', response);
+  // console.log('ini data', response);
   // console.log(decodedToken);
 
   return response;

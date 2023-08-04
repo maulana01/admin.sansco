@@ -30,11 +30,19 @@ export async function loader({ request }: LoaderArgs) {
     return redirect('/kasir/');
   }
 
+  const searchParams = new URLSearchParams(request.url.split('?')[1]);
+  const searchQuery = searchParams.get('search') || '';
+  const page = parseInt(searchParams.get('page') || '1', 10); // Get the page number from the query parameter
+  const limit = 3;
+
   const fetchCategories = async () => {
     try {
-      // const page = 1;
-      // const limit = 10;
-      const response = await fetch(`https://mail.apisansco.my.id/api/v1/categories/`, {
+      const queryString = new URLSearchParams({
+        page: String(page),
+        limit: String(limit),
+        search: String(searchQuery),
+      }).toString();
+      const response = await fetch(`https://mail.apisansco.my.id/api/v1/categories/?${queryString}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +52,7 @@ export async function loader({ request }: LoaderArgs) {
       // console.log('Data fetched:', data);
       return data;
     } catch (error) {
-      // console.log('Error:', error);
+      console.log('Error:', error);
     }
   };
 
@@ -106,6 +114,7 @@ const Modal: React.FC<ModalProps> = ({ onClose, onConfirmDelete }) => {
 
 export default function Categories() {
   const categories = useLoaderData();
+  const [searchQuery, setSearchQuery] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState<string | null>(null);
 
@@ -151,17 +160,51 @@ export default function Categories() {
     closeModal();
   };
 
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const queryString = new URLSearchParams({
+      page: '1', // Reset page to 1 on search
+      search: searchQuery,
+    }).toString();
+
+    // Redirect to the URL with the new queryString
+    window.location.href = `/owner/categories/?${queryString}`;
+  };
+
+  const handlePaginationClick = (page: number) => {
+    // Parse the existing query string from the URL
+    const currentSearchParams = new URLSearchParams(window.location.search);
+
+    // Update the 'page' parameter in the existing query string
+    currentSearchParams.set('page', String(page));
+
+    // Get the updated query string
+    const updatedQueryString = currentSearchParams.toString();
+
+    // Redirect to the URL with the updated query string
+    window.location.href = `/owner/categories/?${updatedQueryString}`;
+  };
+
   return (
     <div style={main}>
       <link href='https://cdn.jsdelivr.net/npm/remixicon@3.2.0/fonts/remixicon.css' rel='stylesheet' />
       <div style={helper}>
         <h2 style={heading}>Daftar Kategori Menu</h2>
       </div>
-      {/* create button */}
-      <div style={buttonContainer}>
-        <a style={button} href='/owner/categories/add'>
-          Tambah Data
-        </a>
+      <div style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+        <form onSubmit={handleSearch}>
+          <input
+            type='text'
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{ ...searchInput }}
+            placeholder='Search by Name'
+          />
+          <button type='submit' style={searchButton}>
+            Search
+          </button>
+        </form>
+        <a style={{ ...searchButton, borderRadius: '5px', marginRight: '2rem'}} href='/owner/categories/add'>Tambah Data</a>
       </div>
       <div style={tableContainer}>
         <table style={table}>
@@ -173,7 +216,7 @@ export default function Categories() {
             </tr>
           </thead>
           <tbody>
-            {categories.data.map((data: any) => (
+            {categories.data.rows.map((data: any) => (
               <tr key={data.id}>
                 <td style={td}>{data.name}</td>
                 <td style={td}>
@@ -202,11 +245,27 @@ export default function Categories() {
       {/* <span style={span}>Breakpoints on 900px and 400px</span> */}
       <div style={paginationContainer}>
         <div style={pagination}>
-          <span style={paginationItem}>
+          <span
+            style={{
+              ...paginationItem,
+              cursor: categories.current_page == 1 ? 'not-allowed' : 'pointer',
+              pointerEvents: categories.current_page == 1 ? 'none' : 'auto',
+            }}
+            onClick={() => handlePaginationClick(Number(categories.current_page) - 1)} // Go to the previous page
+          >
             <i className='ri-arrow-left-line'></i>
           </span>
-          <div style={{ margin: '0 0.5rem' }}>Page 1 of 1</div>
-          <span style={paginationItem}>
+          <div style={{ margin: '0 0.5rem' }}>
+            Page {categories.current_page} of {categories.total_pages}
+          </div>
+          <span
+            style={{
+              ...paginationItem,
+              cursor: categories.current_page == categories.total_pages ? 'not-allowed' : 'pointer',
+              pointerEvents: categories.current_page == categories.total_pages ? 'none' : 'auto',
+            }}
+            onClick={() => handlePaginationClick(Number(categories.current_page) + 1)} // Go to the next page
+          >
             <i className='ri-arrow-right-line'></i>
           </span>
         </div>
@@ -263,7 +322,6 @@ const main: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'column',
   justifyContent: 'flex-start', // Align items to the top of the container
-  alignItems: 'center',
   flex: 1,
   height: '100vh',
   backgroundColor: '#f5f5f5',
@@ -283,7 +341,7 @@ const helper: React.CSSProperties = {
 };
 
 const heading: React.CSSProperties = {
-  marginBottom: '0.5rem',
+  marginBottom: '1rem',
   textAlign: 'left',
 };
 
@@ -390,4 +448,22 @@ const buttonDelete: React.CSSProperties = {
   cursor: 'pointer',
   borderRadius: '5px',
   marginLeft: '7px',
+};
+
+const searchInput: React.CSSProperties = {
+  padding: '10px',
+  fontSize: '1rem',
+  borderRadius: '5px 0 0 5px',
+  border: '1px solid #ccc',
+};
+
+const searchButton: React.CSSProperties = {
+  padding: '10px 20px',
+  fontSize: '1rem',
+  backgroundColor: '#4CAF50',
+  color: 'white',
+  margin: 0,
+  border: 'none',
+  borderRadius: '0 5px 5px 0',
+  cursor: 'pointer',
 };

@@ -54,7 +54,7 @@ export const action = async ({ request, params }: ActionArgs) => {
     return { status: 'error', message: 'Form data is incomplete' };
   }
 
-  console.log('ini params', params.id);
+  // console.log('ini params', params.id);
 
   const updateUser = async () => {
     try {
@@ -84,7 +84,7 @@ export const action = async ({ request, params }: ActionArgs) => {
 export default function EditUsers() {
   const result = useActionData<typeof action>();
   const loaderResult = useLoaderData<typeof loader>();
-  console.log(result);
+  // console.log(result);
 
   const notify = (data: string, type: 'success' | 'error' | 'warning' | 'info') => {
     toast[type](data, {

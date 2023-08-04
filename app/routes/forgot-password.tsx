@@ -52,7 +52,7 @@ export const action = async ({ request }: ActionArgs) => {
 
   const response = await sendForgotPasswordToken();
 
-  console.log('ini data', response);
+  // console.log('ini data', response);
   // console.log(decodedToken);
 
   return response;

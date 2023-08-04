@@ -121,7 +121,7 @@ const rupiah: any = (number: any) => {
 
 export default function OrderDetails() {
   const { token, orderDetail } = useLoaderData();
-  console.log('ini token', orderDetail);
+  // console.log('ini token', orderDetail);
 
   return (
     <div style={main}>
