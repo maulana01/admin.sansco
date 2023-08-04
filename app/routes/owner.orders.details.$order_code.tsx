@@ -165,6 +165,14 @@ export default function OrderDetails() {
           {data.Pesanan.payment_method ? data.Pesanan.payment_method.charAt(0).toUpperCase() : '-'}
           {data.Pesanan.payment_method ? data.Pesanan.payment_method.slice(1) : ''}
         </p>
+        {data.Pesanan.user_ids ? (
+          <p style={styles.detailItem}>
+            <span style={styles.label}>Pesanan Dibuat Oleh</span> <span style={{ fontWeight: 'bold', marginLeft: '-0.15rem' }}>:</span>{' '}
+            {data.ProcessedBy}
+          </p>
+        ) : (
+          ''
+        )}
         <p style={styles.detailItem}>
           <span style={styles.label}>Detail Pesanan</span> <span style={{ fontWeight: 'bold', marginLeft: '4.35rem' }}>:</span>
         </p>
