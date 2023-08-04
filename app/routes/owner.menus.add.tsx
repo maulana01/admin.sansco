@@ -153,7 +153,7 @@ export default function AddMenus() {
             Kategori:
           </label>
           <select style={selectInputStyle} id='selectInput' name='category_id'>
-            {loaderResult.data.map((category: any) => (
+            {loaderResult.data.rows.map((category: any) => (
               <option key={category.id} value={category.id}>
                 {category.name}
               </option>
