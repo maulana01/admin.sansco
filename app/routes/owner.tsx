@@ -85,6 +85,9 @@ const menu: React.CSSProperties = {
 };
 
 const container: React.CSSProperties = {
+  margin: '0px',
+  padding: '0px',
+  boxSizing: 'border-box',
   fontFamily: 'Open Sans',
   display: 'flex',
 };
@@ -101,6 +104,7 @@ const menuItemDashboard: React.CSSProperties = {
   fontWeight: 'normal',
   backgroundRepeat: 'no-repeat',
   backgroundPosition: 'left 15px center',
+  textDecoration: 'none',
   color: '#fff',
   backgroundSize: 'auto 20px',
   transition: 'all 0.15s linear',
