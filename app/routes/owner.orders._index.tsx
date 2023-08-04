@@ -350,9 +350,9 @@ export default function OwnerOrder() {
             Search
           </button>
         </form>
-        <button onClick={exportToExcel} style={{ ...searchButton, borderRadius: '5px', marginRight: '2rem' }}>
+        {/* <button onClick={exportToExcel} style={{ ...searchButton, borderRadius: '5px', marginRight: '2rem' }}>
           Export to Excel
-        </button>
+        </button> */}
       </div>
       <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
         <span style={{ marginRight: '1rem' }}>Filter Status:</span>
