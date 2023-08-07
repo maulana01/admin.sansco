@@ -137,7 +137,7 @@ const styles = {
     listStyleType:'none',
   },
   logoutItemSettings: {
-    padding: '0.5em 0 0.5em 0.6em',
+    padding: '0.5em 0 0.5em 0em',
     fontSize: '0.95em',
     fontWeight: 'normal',
     backgroundRepeat: 'no-repeat',
