@@ -272,11 +272,12 @@ const styles = {
     marginRight: '0.5rem',
   },
   detailsOrder: {
-    height: '20vh',
-    overflow: 'scroll',
+    // height: '20vh',
+    overflow: 'auto',
     marginBottom: '2rem',
     listStyleType: 'none',
     paddingLeft: '0',
+    marginTop: '-0.5em',
   },
   buttonHover: {
     backgroundColor: '#ccc', // Adjust the background color for the hover effect
