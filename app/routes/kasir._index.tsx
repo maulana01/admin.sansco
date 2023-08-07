@@ -403,7 +403,8 @@ const filterSelect: React.CSSProperties = {
 const tableContainer: React.CSSProperties = {
   width: '100%',
   overflow: 'auto',
-  maxHeight: '82%',
+  // maxHeight: '82%',
+  maxHeight: '60%',
 };
 
 const table: React.CSSProperties = {
