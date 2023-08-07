@@ -90,7 +90,7 @@ const styles = {
     boxShadow: '0 0 0 4px rgba(59, 43, 51, 1)',
   },
   menuItemDashboard: {
-    padding: '0.5em 0 0.5em 1em',
+    padding: '0.5em 0 0.5em 0.1em',
     fontSize: '0.95em',
     fontWeight: 'normal',
     backgroundRepeat: 'no-repeat',
@@ -99,9 +99,10 @@ const styles = {
     backgroundSize: 'auto 20px',
     transition: 'all 0.15s linear',
     cursor: 'pointer',
+    listStyleType:'none',
   },
   menuItemCustomers: {
-    padding: '0.5em 0 0.5em 1em',
+    padding: '0.5em 0 0.5em 0.1em',
     fontSize: '0.95em',
     fontWeight: 'normal',
     backgroundRepeat: 'no-repeat',
@@ -110,9 +111,10 @@ const styles = {
     transition: 'all 0.15s linear',
     color: '#fff',
     cursor: 'pointer',
+    listStyleType:'none',
   },
   menuItemUsers: {
-    padding: '0.5em 0 0.5em 1em',
+    padding: '0.5em 0 0.5em 0',
     fontSize: '0.95em',
     fontWeight: 'normal',
     backgroundRepeat: 'no-repeat',
@@ -123,7 +125,7 @@ const styles = {
     cursor: 'pointer',
   },
   menuItemSettings: {
-    padding: '0.5em 0 0.5em 1em',
+    padding: '0.5em 0 0.5em 0.1em',
     fontSize: '0.95em',
     fontWeight: 'normal',
     backgroundRepeat: 'no-repeat',
@@ -132,6 +134,7 @@ const styles = {
     backgroundSize: 'auto 20px',
     transition: 'all 0.15s linear',
     cursor: 'pointer',
+    listStyleType:'none',
   },
   logoutItemSettings: {
     padding: '0.5em 0 0.5em 0.6em',
@@ -142,6 +145,8 @@ const styles = {
     backgroundSize: 'auto 20px',
     transition: 'all 0.15s linear',
     cursor: 'pointer',
+    marginLeft: '-0.1em',
+    listStyleType:'none',
   },
   buttonLogout: {
     background: 'none',

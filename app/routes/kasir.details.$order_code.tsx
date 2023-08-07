@@ -226,7 +226,7 @@ export default function OrderDetails() {
 
 const helper: React.CSSProperties = {
   fontSize: '1.5rem',
-  marginBottom: '1rem',
+  marginBottom: '-1em',
   marginLeft: '1rem',
   color: '#333',
   // alignSelf:'flex-start'
@@ -238,7 +238,7 @@ const main: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'flex-start',
   flex: 1,
-  height: '100vh',
+  // height: '100vh',
   background: '#f5f5f5',
   width: '80vw',
 };
@@ -273,8 +273,10 @@ const styles = {
   },
   detailsOrder: {
     height: '20vh',
-    overflow: 'auto',
+    overflow: 'scroll',
     marginBottom: '2rem',
+    listStyleType: 'none',
+    paddingLeft: '0',
   },
   buttonHover: {
     backgroundColor: '#ccc', // Adjust the background color for the hover effect

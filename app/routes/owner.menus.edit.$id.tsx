@@ -89,10 +89,10 @@ export default function EditMenus() {
         body: formData,
       });
 
-			const result = await response.json();
-			const status = String(result.status); // Ensure the status is treated as a string
+      const result = await response.json();
+      const status = String(result.status); // Ensure the status is treated as a string
 
-			if (status === 'success') {
+      if (status === 'success') {
         notify('Data Kategori Menu berhasil diubah!', 'success');
         setTimeout(() => {
           window.location.href = '/owner/menus/';
@@ -104,9 +104,9 @@ export default function EditMenus() {
         }, 2500);
       }
     } catch (error) {
-			console.error('Error updating category:', error);
-			notify('Terjadi kesalahan saat mengubah data Kategori Menu!', 'error');
-		}
+      console.error('Error updating category:', error);
+      notify('Terjadi kesalahan saat mengubah data Kategori Menu!', 'error');
+    }
   };
 
   // Event listener to handle file selection and generate the preview image URL
@@ -161,11 +161,11 @@ export default function EditMenus() {
           />
           {/* Show the preview image if available */}
           {previewImage ? (
-            <div style={{ marginTop: '1rem' }}>
+            <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
               <img src={previewImage} alt='Preview' style={{ width: '150px', height: '150px', objectFit: 'cover' }} />
             </div>
           ) : (
-            <div style={{ marginTop: '1rem' }}>
+            <div style={{ marginTop: '1rem', marginBottom: '1rem' }}>
               <img src={loaderResult.menu.data.image} alt='Preview' style={{ width: '150px', height: '150px', objectFit: 'cover' }} />
             </div>
           )}
@@ -190,6 +190,7 @@ const main: React.CSSProperties = {
   width: '80vw',
   padding: '2rem 0 0 2rem',
   boxSizing: 'border-box',
+  overflowY: 'scroll',
 };
 
 const helper: React.CSSProperties = {

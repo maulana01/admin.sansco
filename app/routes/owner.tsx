@@ -99,7 +99,7 @@ const avatarImg: React.CSSProperties = {
   boxShadow: '0 0 0 4px rgba(59, 43, 51, 1)',
 };
 const menuItemDashboard: React.CSSProperties = {
-  padding: '0.5em 0 0.5em 1em',
+  padding: '0.5em 0 0.5em 0.1em',
   fontSize: '0.95em',
   fontWeight: 'normal',
   backgroundRepeat: 'no-repeat',
@@ -133,7 +133,7 @@ const menuItemUsers: React.CSSProperties = {
   cursor: 'pointer',
 };
 const menuItemSettings: React.CSSProperties = {
-  padding: '0.5em 0 0.5em 1em',
+  padding: '0.5em 0 0.5em 0.1em',
   fontSize: '0.95em',
   fontWeight: 'normal',
   backgroundRepeat: 'no-repeat',
@@ -142,9 +142,10 @@ const menuItemSettings: React.CSSProperties = {
   backgroundSize: 'auto 20px',
   transition: 'all 0.15s linear',
   cursor: 'pointer',
+  listStyleType:'none',
 };
 const logoutItemSettings: React.CSSProperties = {
-  padding: '0.5em 0 0.5em 0.6em',
+  padding: '0.5em 0 0.5em 0',
   fontSize: '0.95em',
   fontWeight: 'normal',
   backgroundRepeat: 'no-repeat',
@@ -152,6 +153,8 @@ const logoutItemSettings: React.CSSProperties = {
   backgroundSize: 'auto 20px',
   transition: 'all 0.15s linear',
   cursor: 'pointer',
+  marginLeft: '-0.1em',
+  listStyleType:'none',
 };
 const buttonLogout: React.CSSProperties = {
   background: 'none',

@@ -171,7 +171,7 @@ export default function AddMenus() {
           />
           {/* Show the preview image if available */}
           {previewImage && (
-            <div style={{ marginTop: '1rem' }}>
+            <div style={{ marginTop: '1rem', marginBottom:'1rem' }}>
               <img src={previewImage} alt='Preview' style={{ width: '150px', height: '150px', objectFit: 'cover' }} />
             </div>
           )}
@@ -196,6 +196,7 @@ const main: React.CSSProperties = {
   width: '80vw',
   padding: '2rem 0 0 2rem',
   boxSizing: 'border-box',
+  overflowY: 'scroll',
 };
 
 const helper: React.CSSProperties = {
