@@ -64,9 +64,9 @@ export const action = async ({ request, params }: ActionArgs) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: body.get('name') != '' && body.get('name'),
-          email: body.get('email') != '' && body.get('email'),
-          phone_number: body.get('phone_number') != '' && body.get('phone_number'),
+          // name: body.get('name') != '' && body.get('name'),
+          // email: body.get('email') != '' && body.get('email'),
+          // phone_number: body.get('phone_number') != '' && body.get('phone_number'),
           role: body.get('role'),
         }),
       });
@@ -99,10 +99,10 @@ export default function EditUsers() {
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    if (formData.get('name') === '' || formData.get('phone_number') === '' || formData.get('email') === '') {
-      notify('Harap Lengkapi data!', 'error');
-      return;
-    }
+    // if (formData.get('name') === '' || formData.get('phone_number') === '' || formData.get('email') === '') {
+    //   notify('Harap Lengkapi data!', 'error');
+    //   return;
+    // }
 
     // If the form is valid, call the 'load' function (which will trigger the 'action' function)
     const response = await action({
@@ -132,7 +132,7 @@ export default function EditUsers() {
       {/* Form section */}
       <div style={formContainer}>
         <Form method='post' onSubmit={handleSubmit}>
-          <label style={formLabel} htmlFor='dataInput'>
+          {/* <label style={formLabel} htmlFor='dataInput'>
             Nama:
           </label>
           <input style={formInput} type='text' id='dataInput' name='name' defaultValue={loaderResult.data.name} />
@@ -143,7 +143,7 @@ export default function EditUsers() {
           <label style={formLabel} htmlFor='dataInput'>
             Email:
           </label>
-          <input style={formInput} type='email' id='dataInput' name='email' defaultValue={loaderResult.data.email} />
+          <input style={formInput} type='email' id='dataInput' name='email' defaultValue={loaderResult.data.email} /> */}
           <label style={formLabel} htmlFor='dataInput'>
             Role:
           </label>
