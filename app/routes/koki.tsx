@@ -22,6 +22,9 @@ export async function loader({ request }: LoaderArgs) {
   const session = await storage.getSession(request.headers.get('Cookie'));
   const getToken = session.get('token');
 
+  if (!getToken) {
+    return redirect('/login');
+  }
   const decodedToken = decodeToken(getToken) as { role: string } | null;
 
   return decodedToken;
@@ -175,7 +178,7 @@ const styles = {
     backgroundSize: 'auto 20px',
     transition: 'all 0.15s linear',
     cursor: 'pointer',
-    marginLeft: '-0.1em',
+    marginLeft: '-0.3em',
     listStyleType:'none',
   },
   buttonLogout: {

@@ -125,125 +125,143 @@ export default function OrderDetails() {
 
   return (
     <div style={main}>
-      <div style={helper}>
-        <h2>Detail Pesanan</h2>
-      </div>
-      <div style={styles.details}>
-        <p style={styles.detailItem}>
-          <span style={styles.label}>Kode Pesanan</span> <span style={{ fontWeight: 'bold', marginLeft: '5.25rem' }}>:</span>{' '}
-          {orderDetail.data.Pesanan.order_code}
-        </p>
-        <p style={styles.detailItem}>
-          <span style={styles.label}>Nomor Meja</span> <span style={{ fontWeight: 'bold', marginLeft: '6.4rem' }}>:</span>{' '}
-          {orderDetail.data.Pesanan.table_number}
-        </p>
-        <p style={styles.detailItem}>
-          <span style={styles.label}>Total Bayar</span> <span style={{ fontWeight: 'bold', marginLeft: '7.1rem' }}>:</span>{' '}
-          {rupiah(orderDetail.data.Pesanan.payment_amount)}
-        </p>
-        <p style={styles.detailItem}>
-          <span style={styles.label}>Status</span> <span style={{ fontWeight: 'bold', marginLeft: '10.85rem' }}>:</span>{' '}
-          {orderDetail.data.Pesanan.status}
-        </p>
-        <p style={styles.detailItem}>
-          <span style={styles.label}>Nama</span> <span style={{ fontWeight: 'bold', marginLeft: '11.1rem' }}>:</span>{' '}
-          {orderDetail.data.Pesanan.name}
-        </p>
-        <p style={styles.detailItem}>
-          <span style={styles.label}>Metode Pembayaran</span> <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>:</span>
-          {orderDetail.data.Pesanan.payment_method.charAt(0).toUpperCase()}
-          {orderDetail.data.Pesanan.payment_method.slice(1)}
-        </p>
-        {orderDetail.data.Pesanan.user_ids ? (
-          <p style={styles.detailItem}>
-            <span style={styles.label}>Pesanan Dibuat Oleh</span> <span style={{ fontWeight: 'bold', marginLeft:'-0.15rem' }}>:</span>{' '}
-            {orderDetail.data.ProcessedBy}
-          </p>
-        ) : (
-          ''
-        )}
-        <p style={styles.detailItem}>
-          <span style={styles.label}>Detail Pesanan</span> <span style={{ fontWeight: 'bold', marginLeft: '4.35rem' }}>:</span>
-        </p>
-        <ul style={styles.detailsOrder}>
-          {orderDetail.data['Detail Pesanan'].map((item: any) => (
-            <li key={item.id}>
+      {orderDetail.data ? (
+        <div>
+          <div style={helper}>
+            <h2 style={heading}>Detail Pesanan</h2>
+          </div>
+          <div style={styles.details}>
+            <p style={styles.detailItem}>
+              <span style={styles.label}>Kode Pesanan</span> <span style={{ fontWeight: 'bold', marginLeft: '5.25rem' }}>:</span>{' '}
+              {orderDetail.data.Pesanan.order_code}
+            </p>
+            <p style={styles.detailItem}>
+              <span style={styles.label}>Nomor Meja</span> <span style={{ fontWeight: 'bold', marginLeft: '6.4rem' }}>:</span>{' '}
+              {orderDetail.data.Pesanan.table_number}
+            </p>
+            <p style={styles.detailItem}>
+              <span style={styles.label}>Total Bayar</span> <span style={{ fontWeight: 'bold', marginLeft: '7.1rem' }}>:</span>{' '}
+              {rupiah(orderDetail.data.Pesanan.payment_amount)}
+            </p>
+            <p style={styles.detailItem}>
+              <span style={styles.label}>Status</span> <span style={{ fontWeight: 'bold', marginLeft: '10.85rem' }}>:</span>{' '}
+              {orderDetail.data.Pesanan.status}
+            </p>
+            <p style={styles.detailItem}>
+              <span style={styles.label}>Nama</span> <span style={{ fontWeight: 'bold', marginLeft: '11.1rem' }}>:</span>{' '}
+              {orderDetail.data.Pesanan.name}
+            </p>
+            <p style={styles.detailItem}>
+              <span style={styles.label}>Metode Pembayaran</span> <span style={{ fontWeight: 'bold', marginRight: '0.5rem' }}>:</span>
+              {orderDetail.data.Pesanan.payment_method.charAt(0).toUpperCase()}
+              {orderDetail.data.Pesanan.payment_method.slice(1)}
+            </p>
+            {orderDetail.data.Pesanan.user_ids ? (
               <p style={styles.detailItem}>
-                <span style={styles.label}>- {item.menu_ref.name}</span> (x{item.qty})
+                <span style={styles.label}>Pesanan Dibuat Oleh</span> <span style={{ fontWeight: 'bold', marginLeft: '-0.15rem' }}>:</span>{' '}
+                {orderDetail.data.ProcessedBy}
               </p>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div style={styles.buttonContainer}>
-        <Form method='post'>
-          {orderDetail.data.Pesanan.status === 'Pesanan Sudah Dibayar' ? (
-            <div>
-              <input type='hidden' name='user_ids' defaultValue={token.id} />
-              <button
-                type='submit'
-                name='status'
-                style={button}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                value={orderDetail.data.Pesanan.status}
-              >
-                Proses Pesanan
-              </button>
-            </div>
-          ) : orderDetail.data.Pesanan.status === 'Pesanan Sedang Diproses' ? (
-            <button
-              type='submit'
-              name='status'
-              style={button}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              value={orderDetail.data.Pesanan.status}
-            >
-              Selesaikan Pesanan
+            ) : (
+              ''
+            )}
+            <p style={styles.detailItem}>
+              <span style={styles.label}>Daftar Pesanan</span> <span style={{ fontWeight: 'bold', marginLeft: '4rem' }}>:</span>
+            </p>
+            <ul style={styles.detailsOrder}>
+              {orderDetail.data['Detail Pesanan'].map((item: any) => (
+                <li key={item.id}>
+                  <p style={styles.detailItem}>
+                    <span style={styles.label}>- {item.menu_ref.name}</span> (x{item.qty})
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div style={styles.buttonContainer}>
+            <Form method='post'>
+              {orderDetail.data.Pesanan.status === 'Pesanan Sudah Dibayar' ? (
+                <div>
+                  <input type='hidden' name='user_ids' defaultValue={token.id} />
+                  <button
+                    type='submit'
+                    name='status'
+                    style={button}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    value={orderDetail.data.Pesanan.status}
+                  >
+                    Proses Pesanan
+                  </button>
+                </div>
+              ) : orderDetail.data.Pesanan.status === 'Pesanan Sedang Diproses' ? (
+                <button
+                  type='submit'
+                  name='status'
+                  style={button}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
+                  value={orderDetail.data.Pesanan.status}
+                >
+                  Selesaikan Pesanan
+                </button>
+              ) : (
+                <button style={{ display: 'none' }}></button>
+              )}
+            </Form>
+            <button style={button} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+              {orderDetail.data.Pesanan.status === 'Pesanan Sudah Dibayar' ? (
+                <a href='/koki' style={styles.buttonLink}>
+                  Kembali
+                </a>
+              ) : orderDetail.data.Pesanan.status === 'Pesanan Sedang Diproses' ? (
+                <a href='/koki/list-processed-orders' style={styles.buttonLink}>
+                  Kembali
+                </a>
+              ) : (
+                <a href='/koki/list-finished-orders' style={styles.buttonLink}>
+                  Kembali
+                </a>
+              )}
             </button>
-          ) : (
-            <button style={{ display: 'none' }}></button>
-          )}
-        </Form>
-        <button style={button} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-          {orderDetail.data.Pesanan.status === 'Pesanan Sudah Dibayar' ? (
-            <a href='/koki' style={styles.buttonLink}>
-              Kembali
-            </a>
-          ) : orderDetail.data.Pesanan.status === 'Pesanan Sedang Diproses' ? (
-            <a href='/koki/list-processed-orders' style={styles.buttonLink}>
-              Kembali
-            </a>
-          ) : (
-            <a href='/koki/list-finished-orders' style={styles.buttonLink}>
-              Kembali
-            </a>
-          )}
-        </button>
-      </div>
+          </div>
+        </div>
+      ) : (
+        <div>
+          <div style={helper}>
+            <h2>Pesanan Tidak Ditemukan</h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
+const heading: React.CSSProperties = {
+  marginBottom: '0.5rem',
+  textAlign: 'left',
+};
+
 const helper: React.CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start', // Align heading to the top left
   fontSize: '1.5rem',
-  // marginBottom: '1rem',
-  marginLeft: '1rem',
+  fontWeight: 600,
   color: '#333',
-  marginBottom:'-1em',
-  // alignSelf:'flex-start'
+  width: '100%', // Ensure the heading takes full width
 };
 
 const main: React.CSSProperties = {
   display: 'flex',
-  flexDirection: 'column', // Set flex direction to column
-  justifyContent: 'center',
-  alignItems: 'flex-start',
+  flexDirection: 'column',
+  justifyContent: 'flex-start', // Align items to the top of the container
   flex: 1,
-  // height: '100vh',
-  background: '#f5f5f5',
+  overflowY:'auto',
+  height: '100vh',
+  backgroundColor: '#f5f5f5',
   width: '80vw',
+  padding: '2rem 0 0 2rem',
+  boxSizing: 'border-box', // Add this line to include padding in width and height
 };
 
 const button: React.CSSProperties = {
@@ -264,10 +282,10 @@ const button: React.CSSProperties = {
 const styles = {
   details: {
     fontSize: '1.5rem',
-    marginLeft: '1rem',
+    // marginLeft: '1rem',
   },
   detailItem: {
-    marginBottom: '0.5rem',
+    marginBottom: '1rem',
     color: '#333',
   },
   label: {
@@ -275,7 +293,7 @@ const styles = {
     marginRight: '0.5rem',
   },
   detailsOrder: {
-    // height: '20vh',
+    height: '20vh',
     overflow: 'auto',
     marginBottom: '2rem',
     listStyleType: 'none',

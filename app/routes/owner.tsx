@@ -1,6 +1,6 @@
 /** @format */
 
-import { LoaderArgs } from '@remix-run/node';
+import { LoaderArgs, redirect } from '@remix-run/node';
 import { Link, Outlet, useLoaderData } from '@remix-run/react';
 import React from 'react';
 import { decodeToken } from 'react-jwt';
@@ -11,6 +11,9 @@ export async function loader({ request }: LoaderArgs) {
   const session = await storage.getSession(request.headers.get('Cookie'));
   const getToken = session.get('token');
 
+  if (!getToken) {
+    return redirect('/login');
+  }
   const decodedToken = decodeToken(getToken) as { role: string } | null;
 
   return decodedToken;
@@ -153,7 +156,7 @@ const logoutItemSettings: React.CSSProperties = {
   backgroundSize: 'auto 20px',
   transition: 'all 0.15s linear',
   cursor: 'pointer',
-  marginLeft: '-0.1em',
+  marginLeft: '-0.3em',
   listStyleType:'none',
 };
 const buttonLogout: React.CSSProperties = {

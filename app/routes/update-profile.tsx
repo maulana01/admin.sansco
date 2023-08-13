@@ -483,7 +483,7 @@ const styles = {
     backgroundSize: 'auto 20px',
     transition: 'all 0.15s linear',
     cursor: 'pointer',
-    marginLeft: '-0.1em',
+    marginLeft: '-0.3em',
     listStyleType:'none',
   },
   buttonLogout: {
